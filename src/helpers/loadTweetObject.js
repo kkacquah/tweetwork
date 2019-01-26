@@ -1,25 +1,36 @@
 import * as moment from 'moment';
 
 export function createCachedTweetObject(tweetObject){
-  var tweetDisplayObject = {
-    createdAt: moment(tweetObject.createdAt, 'en'),
+  var cachedTweetDisplayObject = {
+    created_at: moment(tweetObject.created_at, 'ddd MMM DD HH:mm:ss ZZ YYYY'),
+    id:tweetObject.id,
     name:tweetObject.user.name,
-    screenName: tweetObject.user.screenName,
+    screen_name: tweetObject.user.screen_name,
     text: tweetObject.text,
-    profileImageUrl: tweetObject.user.profileImageUrl
+    profile_image_url: tweetObject.user.profile_image_url,
+    verified: tweetObject.user.verified
+  };
+  return cachedTweetDisplayObject;
+}
+export function createTweetDisplayObject(tweetObject){
+  var cachedTweetDisplayObject = createCachedTweetObject(tweetObject);
+  var tweetDisplayObject = {
+    time_since: timeSince(cachedTweetDisplayObject.created_at),
+    id:cachedTweetDisplayObject.id,
+    name:cachedTweetDisplayObject.name,
+    screen_name: cachedTweetDisplayObject.screen_name,
+    text: cachedTweetDisplayObject.text,
+    profile_image_url: cachedTweetDisplayObject.profile_image_url,
+    verified: cachedTweetDisplayObject.verified
   };
   return tweetDisplayObject;
 }
-function createTweetObjectForDisplay(tweetObject){
-  return null;
-}
 
 
-function timeSince(date) {
+function timeSince(dateMoment) {
+  var seconds = Math.floor((moment() - dateMoment)/1000);
 
-  var seconds = Math.floor((new Date() - date) / 1000);
-
-  var interval = Math.floor(seconds / 31536000);
+  var interval = Math.floor(seconds / 15768000);
 
   if (interval > 1) {
     return interval + " years";

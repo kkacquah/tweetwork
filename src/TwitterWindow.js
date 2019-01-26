@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import {GenericScrollBox} from 'react-scroll-box'; // ES6
-import {createCachedTweetObject} from './helpers/loadTweetObject';
+import {createTweetDisplayObject} from './helpers/loadTweetObject';
 import {exampleTweets} from './apis/exampleTweets';
-
+import Tweet from './Tweet';
 const styles = {
   twitterWindow:{
     marginTop: '20px',
@@ -11,19 +11,23 @@ const styles = {
     height: '90%',
     width: '200px',
     position:'absolute',
-    backgroundColor: 'White'
+    backgroundColor: 'White',
+    flexDirection: 'row'
+  },
+  twitterCard:{
+    backgroundColor: 'white',
+    borderBottom: '1px solid #E1E8ED',
+    flexDirection: 'column'
   }
 }
-const tweetObjects = ["I love the Titanic","I hate the Titanic"];
-const listItems = exampleTweets.map((tweetObject) =>
-  <li>{createCachedTweetObject(tweetObject).text}</li>
-);
+var tweetObjects = exampleTweets.map((tweetObject) => createTweetDisplayObject(tweetObject));
+
 class TwitterWindow extends Component {
   render() {
     return (
       <GenericScrollBox style={styles.twitterWindow} disableScrollX>
         <div className="scroll-box__viewport">
-          {listItems}
+          {tweetObjects.map((tweetObj) => <Tweet tweetObject = {tweetObj}/>)}
         </div>
       </GenericScrollBox>
     );
