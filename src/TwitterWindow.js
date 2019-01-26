@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {GenericScrollBox} from 'react-scroll-box'; // ES6
 import {createTweetDisplayObject} from './helpers/loadTweetObject';
-import {exampleTweets} from './apis/exampleTweets';
+import {getTweetsFromUser} from './apis/twitterApiCalls';
 import Tweet from './Tweet';
 const styles = {
   twitterWindow:{
@@ -20,14 +20,32 @@ const styles = {
     flexDirection: 'column'
   }
 }
-var tweetObjects = exampleTweets.map((tweetObject) => createTweetDisplayObject(tweetObject));
+getTweetsFromUser("realDonaldTrump")
+//var tweetObjects = getTweetsFromUser("realDonaldTrump").map((tweetObject) => createTweetDisplayObject(tweetObject));
 
 class TwitterWindow extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      tweetObjects: []
+    }
+  }
+  loadTweetObjects(){
+    getTweetsFromUser("michellemenkiti")
+    .then((tweetObjs)=> {
+      this.setState({
+        tweetObjects: tweetObjs.map((tweetObject) => createTweetDisplayObject(tweetObject))
+      })
+    })
+  }
+  componentDidMount () {
+    this.loadTweetObjects()
+  }
   render() {
     return (
       <GenericScrollBox style={styles.twitterWindow} disableScrollX>
         <div className="scroll-box__viewport">
-          {tweetObjects.map((tweetObj) => <Tweet tweetObject = {tweetObj}/>)}
+          {this.state.tweetObjects.map((tweetObj) => <Tweet tweetObject = {tweetObj}/>)}
         </div>
       </GenericScrollBox>
     );

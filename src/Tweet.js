@@ -53,7 +53,12 @@ class Tweet extends Component {
   render() {
     return (
       <div style={styles.twitterCard}>
-        <div style={{flexDirection: 'row',marginBottom:3,display:'flex'}}>
+
+        <div style={{flexDirection: 'row',display:'flex'}}>
+        <div>
+          <img width="40" height="40" src={this.props.tweetObject.profile_image_url} alt="profile-image" />
+          </div>
+        <div style={{flexDirection: 'row',marginBottom:3,display:'flex',flex:1}}>
         <p style={styles.nameFont}> {this.props.tweetObject.name} </p>
         {this.props.tweetObject.verified ? <div style={{marginTop:5, marginLeft: 2}}>
         <img width="13" height="13" src={twitterVerifiedSymbol} alt="verified-logo" />
@@ -67,6 +72,7 @@ class Tweet extends Component {
         </p>
         <div>
         <p style={styles.dateFont}> {this.props.tweetObject.time_since} </p>
+        </div>
         </div>
       </div>
     );

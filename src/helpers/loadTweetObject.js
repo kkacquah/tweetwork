@@ -6,7 +6,7 @@ export function createCachedTweetObject(tweetObject){
     id:tweetObject.id,
     name:tweetObject.user.name,
     screen_name: tweetObject.user.screen_name,
-    text: tweetObject.text,
+    text: tweetObject.full_text,
     profile_image_url: tweetObject.user.profile_image_url,
     verified: tweetObject.user.verified
   };
