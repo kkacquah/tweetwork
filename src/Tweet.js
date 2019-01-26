@@ -53,8 +53,6 @@ class Tweet extends Component {
   render() {
     return (
       <div style={styles.twitterCard}>
-
-        <div style={{flexDirection: 'row',display:'flex'}}>
         <div>
           <img width="40" height="40" src={this.props.tweetObject.profile_image_url} alt="profile-image" />
           </div>
@@ -74,7 +72,6 @@ class Tweet extends Component {
         <p style={styles.dateFont}> {this.props.tweetObject.time_since} </p>
         </div>
         </div>
-      </div>
     );
   }
 }
