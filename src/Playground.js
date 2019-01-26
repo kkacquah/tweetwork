@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ForceGraph2D, ForceGraph3D, ForceGraphVR } from 'react-force-graph';
-
+var colors =
 var myData = {
     nodes: [
         {
