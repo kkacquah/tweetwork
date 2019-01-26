@@ -12,18 +12,43 @@ var myData = {
           id: "id2",
           name: "name2",
           val: 10
+        },
+        {
+          id: "id3",
+          name: "name3",
+          val: 5
+        },
+        {
+          id: "id4",
+          name: "name4",
+          val: 20
         }
     ],
     links: [
         {
             source: "id1",
-            target: "id2"
-        }
+            target: "id2",
+        },
+        {
+            source: "id2",
+            target: "id3",
+        },
+        {
+            source: "id2",
+            target: "id4",
+        },
     ]
 }
 
 
 class Playground extends Component {
+  myColor(node) {
+    if (node.id == 'id1'){
+      return "#FF0000"
+    } else {
+      return "#00ff00"
+    }
+  }
   constructor(props) {
     super(props);
     // Don't call this.setState() here!
@@ -31,8 +56,9 @@ class Playground extends Component {
   render() {
     return (
       <div>
-      <ForceGraph3D
+      <ForceGraph2D
     graphData={myData}
+    nodeColor={this.myColor}
   />
   </div>
 );
