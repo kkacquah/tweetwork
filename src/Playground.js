@@ -1,55 +1,6 @@
 import React, { Component } from 'react';
 import { ForceGraph2D, ForceGraph3D, ForceGraphVR } from 'react-force-graph';
 
-var myData = {
-    nodes: [
-        {
-          id: "id1",
-          name: "name1",
-          val: 3,
-          description:
-          `Comments: 120 <br\>
-          Retweets: 160 <br\>
-          Likes: 1,200 <br\>`,
-        },
-        {
-          id: "id2",
-          name: "name2",
-          val: 10,
-          description: "I love clovers",
-        },
-        {
-          id: "id3",
-          name: "name3",
-          val: 5,
-          description: "I love clovers",
-        },
-        {
-          id: "id4",
-          name: "name4",
-          val: 15,
-          description: "I love clovers",
-        }
-    ],
-    links: [
-        {
-            source: "id1",
-            target: "id2"
-        },
-        {
-            source: "id2",
-            target: "id3"
-        },
-        {
-            source: "id1",
-            target: "id4"
-        },
-        {
-            source: "id1",
-            target: "id3"
-        },
-    ]
-}
 
 
 class Playground extends Component
@@ -104,13 +55,62 @@ label = (node) => {
       }
     }
   }
+  myData = () => {
 
+  return ({
+      nodes: [
+          {
+            id: "id1",
+            name: "name1",
+            val: 3,
+            description:
+            `${this.props.tweetObject}`,
+          },
+          {
+            id: "id2",
+            name: "name2",
+            val: 10,
+            description: "I love clovers",
+          },
+          {
+            id: "id3",
+            name: "name3",
+            val: 5,
+            description: "I love clovers",
+          },
+          {
+            id: "id4",
+            name: "name4",
+            val: 15,
+            description: "I love clovers",
+          }
+      ],
+      links: [
+          {
+              source: "id1",
+              target: "id2"
+          },
+          {
+              source: "id2",
+              target: "id3"
+          },
+          {
+              source: "id1",
+              target: "id4"
+          },
+          {
+              source: "id1",
+              target: "id3"
+          },
+      ]
+  })
+}
   render() {
 
     return (
       <div>
       <ForceGraph2D
-    graphData={myData}
+    graphData={this.myData()}
     nodeColor={this.myColor}
     onNodeHover={this.handleHover}
     onNodeClick={this.click}

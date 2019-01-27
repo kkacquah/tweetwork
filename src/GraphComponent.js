@@ -16,7 +16,7 @@ class GraphComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      focusedTweet: 0,
+      focusedTweet: 1,
       tweetObjects: [],
       hasMore: true,
       isLoading: false,
@@ -61,7 +61,7 @@ class GraphComponent extends Component {
       <div style={styles.GraphBackground}>
 
         <Playground
-        tweetObject={this.state.tweetObjects[this.state.focusedTweet]}
+        tweetObject={this.state.tweetObjects[0] ? this.state.tweetObjects[0].name : null}
         />
         <TwitterWindow
           tweetObjects={this.state.tweetObjects}
