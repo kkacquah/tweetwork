@@ -18,10 +18,13 @@ const styles = {
     overflow:'scroll',
     position: 'fixed',
     borderRadius:5,
-    alignItems:'center'
+    justifyContent:'center'
   },
   loadingStyle:{
-    left: "50%",
+    margin:5,
+    width:'20%',
+    position: 'absolute',
+    left:'40%',
     fill:"#E1E8ED"
   }
 }
@@ -34,7 +37,8 @@ class TwitterWindow extends Component {
       focusedTweet: 0,
       tweetObjects: [],
       hasMore: true,
-      isLoading: false
+      isLoading: false,
+      cursor: null
     }
   }
   focus = (id) => {
@@ -44,20 +48,26 @@ class TwitterWindow extends Component {
   }
   handleScroll = (e) => {
     const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
-    if (bottom) {
+    if (bottom && this.state.hasMore) {
       this.setState({
         isLoading: true
       })
+      this.loadTweetObjects()
     }
+
   }
 
   loadTweetObjects(){
-    getTweetsFromUser("deafGonzo")
+    getTweetsFromUser("realDonaldTrump",this.state.cursor)
     .then((tweetObjs)=> {
       var newTweetObjects = tweetObjs.map((tweetObject) => createTweetDisplayObject(tweetObject));
+      var lastTweetId = newTweetObjects[newTweetObjects.length-1].id_str
       this.setState({
-        tweetObjects: this.state.tweetObjects.concat(newTweetObjects)
-      })
+          tweetObjects: this.state.tweetObjects.concat(newTweetObjects),
+          cursor:lastTweetId,
+          isLoading: false,
+          hasMore: false
+        })
     })
   }
   componentDidMount () {

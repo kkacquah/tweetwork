@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import TwitterWindow from './TwitterWindow.js'
+import Playground from './Playground.js'
 const styles = {
   GraphBackground:{
     backgroundColor: '#202C39',
@@ -13,6 +14,7 @@ class GraphComponent extends Component {
     return (
       <div style={styles.GraphBackground}>
         <TwitterWindow/>
+        <Playground/>
       </div>
     );
   }

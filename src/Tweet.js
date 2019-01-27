@@ -87,7 +87,7 @@ class Tweet extends Component {
         <div>
         <div style={styles.nameStyle}>
         <p style={styles.nameFont}> {this.props.tweetObject.name} </p>
-        {this.props.tweetObject.verified ? <div style={{marginTop:5, marginLeft: 2}}>
+        {this.props.tweetObject.verified ? <div style={ {marginLeft: 2}}>
         <img width="13" height="13" src={twitterVerifiedSymbol} alt="verified-logo" />
         </div> : null}
         </div>

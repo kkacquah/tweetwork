@@ -32,7 +32,7 @@ class Playground extends Component {
   render() {
     return (
       <div>
-      <ForceGraph3D
+      <ForceGraph2D
     graphData={myData}
   />
   </div>

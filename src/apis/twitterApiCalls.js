@@ -4,7 +4,7 @@ import {exampleTweets} from "./exampleTweets"
 import {createTweetDisplayObject} from "../helpers/loadTweetObject"
 import axios from 'axios'
 
-export function getTweetsFromUser (screenName,offset = 0,maxId=null) {
+export function getTweetsFromUser (screenName,maxId=null) {
   var params = {
     screen_name: screenName,
     count: 10,
