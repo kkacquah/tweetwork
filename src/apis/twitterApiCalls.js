@@ -4,16 +4,20 @@ import {exampleTweets} from "./exampleTweets"
 import {createTweetDisplayObject} from "../helpers/loadTweetObject"
 import axios from 'axios'
 
-export function getTweetsFromUser (screenName) {
+export function getTweetsFromUser (screenName,offset = 0,maxId=null) {
+  var params = {
+    screen_name: screenName,
+    count: 10,
+    tweet_mode: 'extended'
+  }
+  if (maxId){
+    params.max_id = maxId
+  }
   return axios({
     method: 'get',
     baseURL: baseUrl,
     url: baseUrl + 'statuses/user_timeline.json',
-    params: {
-      screen_name: screenName,
-      count: 10,
-      tweet_mode: 'extended'
-    },
+    params: params,
     headers: {
       Authorization: bearerToken
     }

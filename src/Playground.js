@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { ForceGraph2D, ForceGraph3D, ForceGraphVR } from 'react-force-graph';
+import TwitterWindow from './TwitterWindow.js';
 
 var myData = {
     nodes: [
@@ -31,8 +32,10 @@ class Playground extends Component {
   render() {
     return (
       <div>
+      <TwitterWindow/>
       <ForceGraph3D
     graphData={myData}
+    backgroundColor='light'
   />
   </div>
 );
