@@ -6,7 +6,7 @@ var myData = {
         {
           id: "id1",
           name: "name1",
-          val: 8,
+          val: 3,
           description:
           `Comments: 120 <br\>
           Retweets: 160 <br\>
@@ -80,12 +80,12 @@ label = (node) => {
   myColor = (node) => {
     if (this.state.focusedNode){
       if (this.state.focusedNode==node.id){
-        return "#C5919D"
+        return "#1DA1F2"
       } else {
-        return "#C5D2DB"
+        return "#657786"
       }
     } else {
-      return "#C5D2DB"
+      return "#657786"
     }
   }
 
@@ -106,6 +106,7 @@ label = (node) => {
   }
 
   render() {
+
     return (
       <div>
       <ForceGraph2D
@@ -114,11 +115,13 @@ label = (node) => {
     onNodeHover={this.handleHover}
     onNodeClick={this.click}
     nodeLabel={this.label}
+    enableZoomPanInteraction= {false}
   />
   </div>
 );
   }
 }
+
 
 
 export default Playground;

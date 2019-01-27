@@ -3,7 +3,7 @@ import TwitterWindow from './TwitterWindow.js'
 import Playground from './Playground.js'
 const styles = {
   GraphBackground:{
-    backgroundColor: '#202C39',
+    backgroundColor: '#E1E8ED',
     width:'100%',
     height:'100%',
     position:'absolute'
