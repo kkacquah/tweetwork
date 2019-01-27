@@ -8,7 +8,24 @@ const styles = {
   twitterCard:{
     backgroundColor: 'white',
     borderBottom: '1px solid #E1E8ED',
-    flexDirection: 'column'
+    flexDirection: 'row',
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding:5
+  },
+  twitterCardFocused:{
+    backgroundColor: ' #F5F8FA',
+    borderBottom: '1px solid #E1E8ED',
+    flexDirection: 'row',
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding:5
+  },
+  nameStyle:{
+    flexDirection: 'row',
+    marginBottom:0,
+    display:'flex',
+    flex:1
   },
   nameFont:{
     fontSize: 12,
@@ -17,6 +34,7 @@ const styles = {
     textAlign: "left",
     marginLeft: 3,
     marginBottom: 0,
+    marginTop:2,
     float:"left"
   },
   screenNameFont:{
@@ -41,22 +59,33 @@ const styles = {
     textAlign: "right",
     marginRight: 3,
     marginTop: 0,
-    marginBottom: 10,
+    marginBottom: 0,
     color: "#AAB8C2"
   }
 }
 class Tweet extends Component {
   constructor(props) {
     super(props);
-    // Don't call this.setState() here!
+  }
+  cardStyle(){
+    if (this.props.focusedTweet == this.props.id){
+      return styles.twitterCardFocused
+    } else {
+      return styles.twitterCard
+    }
+  }
+  handleOnMouseEnter = () => {
+    this.props.onMouseEnter(this.props.id);
   }
   render() {
     return (
-      <div style={styles.twitterCard}>
-        <div>
-          <img width="40" height="40" src={this.props.tweetObject.profile_image_url} alt="profile-image" />
+      <div style={this.cardStyle()} onMouseEnter={this.handleOnMouseEnter}>
+        <div style={{marginTop:0}}>
+          <img style={{borderRadius:'50%'}} width="20" height="20" src={this.props.tweetObject.profile_image_url} alt="profile-image" />
           </div>
-        <div style={{flexDirection: 'row',marginBottom:3,display:'flex',flex:1}}>
+        <div >
+        <div>
+        <div style={styles.nameStyle}>
         <p style={styles.nameFont}> {this.props.tweetObject.name} </p>
         {this.props.tweetObject.verified ? <div style={{marginTop:5, marginLeft: 2}}>
         <img width="13" height="13" src={twitterVerifiedSymbol} alt="verified-logo" />
@@ -68,8 +97,10 @@ class Tweet extends Component {
         <p style={styles.textFont}>
         {this.props.tweetObject.text}
         </p>
-        <div>
+        <div style={{marginTop:0}}>
         <p style={styles.dateFont}> {this.props.tweetObject.time_since} </p>
+        </div>
+        </div>
         </div>
         </div>
     );

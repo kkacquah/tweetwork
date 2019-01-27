@@ -12,31 +12,13 @@ var myData = {
           id: "id2",
           name: "name2",
           val: 10
-        },
-        {
-          id: "id3",
-          name: "name3",
-          val: 5
-        },
-        {
-          id: "id4",
-          name: "name4",
-          val: 20
         }
     ],
     links: [
         {
             source: "id1",
-            target: "id2",
-        },
-        {
-            source: "id2",
-            target: "id3",
-        },
-        {
-            source: "id2",
-            target: "id4",
-        },
+            target: "id2"
+        }
     ]
 }
 
@@ -62,7 +44,7 @@ class Playground extends Component
   render() {
     return (
       <div>
-      <ForceGraph2D
+      <ForceGraph3D
     graphData={myData}
     nodeColor={this.myColor}
     onNodeHover={this.handleHover}
