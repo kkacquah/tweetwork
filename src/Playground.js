@@ -32,10 +32,8 @@ class Playground extends Component {
   render() {
     return (
       <div>
-      <TwitterWindow/>
       <ForceGraph3D
     graphData={myData}
-    backgroundColor='light'
   />
   </div>
 );
