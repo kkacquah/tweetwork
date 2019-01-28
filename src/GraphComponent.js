@@ -3,6 +3,7 @@ import TwitterWindow from './TwitterWindow.js'
 import Playground from './Playground.js'
 import {createTweetDisplayObject} from './helpers/loadTweetObject';
 import {getTweetsFromUser} from './apis/twitterApiCalls';
+import {getTweetReplies} from './apis/twitterApiCalls';
 
 const styles = {
   GraphBackground:{
@@ -16,6 +17,7 @@ class GraphComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      name:"Zidane_KA",
       focusedTweet: 0,
       tweetObjects: [],
       hasMore: true,
@@ -23,10 +25,17 @@ class GraphComponent extends Component {
       cursor: null
     }
   }
+  loadTweetReplies(id){
+    getTweetReplies(this.state.name,this.state.tweetObjects[id].id_str)
+    .then((tweetObjs)=> {
+      console.log(tweetObjs)
+  })
+}
   focus = (id) => {
     this.setState({
       focusedTweet: id
     })
+    this.loadTweetReplies(id)
   }
   handleScroll = (e) => {
     const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
@@ -40,7 +49,7 @@ class GraphComponent extends Component {
   }
 
   loadTweetObjects(){
-    getTweetsFromUser("kanyewest",this.state.cursor)
+    getTweetsFromUser(this.state.name,this.state.cursor)
     .then((tweetObjs)=> {
       var newTweetObjects = tweetObjs.map((tweetObject) => createTweetDisplayObject(tweetObject));
       var lastTweetId = newTweetObjects[newTweetObjects.length-1].id_str
@@ -52,9 +61,10 @@ class GraphComponent extends Component {
         })
     })
   }
+
   componentDidMount () {
     this.loadTweetObjects()
-  }
+ }
 
   render() {
     console.log(this.state.focusedTweet)

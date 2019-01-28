@@ -31,3 +31,28 @@ export function getTweetsFromUser (screenName,maxId=null) {
     return createTweetDisplayObject(exampleTweets)
   });
 }
+export function getTweetReplies (screenName,tweetId) {
+  var params = {
+    q: "to:"+ screenName,
+    since_id:tweetId
+  }
+  return axios({
+    method: 'get',
+    baseURL: baseUrl,
+    url: baseUrl + 'search/tweets.json',
+    params: params,
+    headers: {
+      Authorization: bearerToken
+    }
+  })
+  .then((response) => {
+    console.log(tweetId)
+    console.log(response.data.statuses.map((tweet) => tweet.in_reply_to_status_id_str))
+
+    return response.data.statuses.filter(tweet=>(tweet.in_reply_to_status_id_str ===tweetId))
+  })
+  .catch((error) => {
+    console.log(error);
+    return createTweetDisplayObject(exampleTweets)
+  });
+}
