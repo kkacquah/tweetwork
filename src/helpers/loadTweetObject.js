@@ -3,7 +3,7 @@ import * as moment from 'moment';
 export function createCachedTweetObject(tweetObject){
   var cachedTweetDisplayObject = {
     created_at: moment(tweetObject.created_at, 'ddd MMM DD HH:mm:ss ZZ YYYY'),
-    id_str:(tweetObject.id-1).toString(),
+    id_str:tweetObject.id_str,
     name:tweetObject.user.name,
     screen_name: tweetObject.user.screen_name,
     text: tweetObject.full_text,

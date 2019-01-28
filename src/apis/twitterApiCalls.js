@@ -34,8 +34,10 @@ export function getTweetsFromUser (screenName,maxId=null) {
 export function getTweetReplies (screenName,tweetId) {
   var params = {
     q: "to:"+ screenName,
-    since_id:tweetId
+    since_id:tweetId,
+    count: 100
   }
+  console.log(tweetId)
   return axios({
     method: 'get',
     baseURL: baseUrl,
