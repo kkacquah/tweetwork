@@ -8,7 +8,10 @@ export function createCachedTweetObject(tweetObject){
     screen_name: tweetObject.user.screen_name,
     text: tweetObject.full_text,
     profile_image_url: tweetObject.user.profile_image_url,
-    verified: tweetObject.user.verified
+    verified: tweetObject.user.verified,
+    retweet_count: tweetObject.retweet_count,
+    favorite_count: tweetObject.favorite_count
+
   };
   return cachedTweetDisplayObject;
 }
@@ -21,7 +24,9 @@ export function createTweetDisplayObject(tweetObject){
     screen_name: cachedTweetDisplayObject.screen_name,
     text: cachedTweetDisplayObject.text,
     profile_image_url: cachedTweetDisplayObject.profile_image_url,
-    verified: cachedTweetDisplayObject.verified
+    verified: cachedTweetDisplayObject.verified,
+    retweet_count: cachedTweetDisplayObject.retweet_count,
+    favorite_count: cachedTweetDisplayObject.favorite_count
   };
   return tweetDisplayObject;
 }

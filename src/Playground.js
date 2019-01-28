@@ -61,7 +61,8 @@ class Playground extends Component
   }
   componentDidUpdate (prevProps) {
     if (prevProps.tweetObject !== this.props.tweetObject){
-      var text = this.props.tweetObject.text
+      var text = this.props.tweetObject.retweet_count
+      console.log(this.props.tweetObject.text)
       this.setState({myData: {
         nodes: [
           {

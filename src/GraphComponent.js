@@ -40,7 +40,7 @@ class GraphComponent extends Component {
   }
 
   loadTweetObjects(){
-    getTweetsFromUser("realDonaldTrump",this.state.cursor)
+    getTweetsFromUser("kanyewest",this.state.cursor)
     .then((tweetObjs)=> {
       var newTweetObjects = tweetObjs.map((tweetObject) => createTweetDisplayObject(tweetObject));
       var lastTweetId = newTweetObjects[newTweetObjects.length-1].id_str
@@ -62,13 +62,14 @@ class GraphComponent extends Component {
       <div style={styles.GraphBackground}>
 
         <Playground
-        tweetObject={this.state.tweetObjects[this.state.focusedTweet] ? this.state.tweetObjects[this.state.focusedTweet].text : null}
+        tweetObject={this.state.tweetObjects[this.state.focusedTweet]}
         />
         <TwitterWindow
           tweetObjects={this.state.tweetObjects}
           handleScroll={this.handleScroll}
           isLoading={this.state.isLoading}
-          focus = {this.focus}/>
+          focus = {this.focus}
+          focusedTweet={this.state.focusedTweet}/>
       </div>
     );
   }

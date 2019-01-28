@@ -35,7 +35,7 @@ class TwitterWindow extends Component {
   render() {
     return (
       <div style={styles.twitterWindow} onScroll= {this.handleScroll}>
-          {this.props.tweetObjects.map((value,i) => <Tweet focusedTweet = {this.props.focusedTweet} id={i} onMouseEnter={this.props.focus} tweetObject = {value}/>)}
+          {this.props.tweetObjects.map((value,i) => <Tweet focusedTweet={this.props.focusedTweet} id={i} onMouseEnter={this.props.focus} tweetObject = {value}/>)}
 
           { this.props.isLoading ?
             <div style={{height:50}}>
