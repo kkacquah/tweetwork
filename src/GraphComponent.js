@@ -17,8 +17,9 @@ class GraphComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name:"Zidane_KA",
+      name:"realDonaldTrump",
       focusedTweet: 0,
+      focusedTweetReplies: [],
       tweetObjects: [],
       hasMore: true,
       isLoading: false,
@@ -28,7 +29,10 @@ class GraphComponent extends Component {
   loadTweetReplies(id){
     getTweetReplies(this.state.name,this.state.tweetObjects[id].id_str)
     .then((tweetObjs)=> {
-      console.log(tweetObjs)
+      var newTweetReplies = tweetObjs.map((tweetObject) => createTweetDisplayObject(tweetObject));
+      this.setState({
+          focusedTweetReplies: newTweetReplies
+        })
   })
 }
   focus = (id) => {
@@ -68,11 +72,13 @@ class GraphComponent extends Component {
 
   render() {
     console.log(this.state.focusedTweet)
+    console.log(this.state.focusedTweetReplies)
     return (
       <div style={styles.GraphBackground}>
 
         <Playground
         tweetObject={this.state.tweetObjects[this.state.focusedTweet]}
+        tweetReplies={this.state.focusedTweetReplies}
         />
         <TwitterWindow
           tweetObjects={this.state.tweetObjects}
