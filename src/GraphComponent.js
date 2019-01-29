@@ -17,7 +17,7 @@ class GraphComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      screenName:"realDonaldTrump",
+      screenName:"CNN",
       focusedTweet: 0,
       focusedTweetReplies: [],
       tweetObjects: [],
