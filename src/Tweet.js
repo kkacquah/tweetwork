@@ -68,8 +68,6 @@ class Tweet extends Component {
     super(props);
   }
   cardStyle(){
-    console.log("this.props.focusedTweet",this.props.focusedTweet)
-    console.log("this.props.id",this.props.id)
     if (this.props.focusedTweet == this.props.id){
       return styles.twitterCardFocused
     } else {

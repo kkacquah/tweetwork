@@ -9,119 +9,17 @@ class Playground extends Component
     super(props);
     this.state = {
       focusedNode: null,
-      myData: {
-        nodes: [
-          {
-            id: "id1",
-            name: "name1",
-            val: 3,
-            description:
-            `ere`,
-          },
-          {
-            id: "id2",
-            name: "name2",
-            val: 10,
-            description: "I love clovers",
-          },
-          {
-            id: "id3",
-            name: "name3",
-            val: 5,
-            description: "I love clovers",
-          },
-          {
-            id: "id4",
-            name: "name4",
-            val: 15,
-            description: "I love clovers",
-          }
-        ],
-        links: [
-          {
-            source: "id1",
-            target: "id2"
-          },
-          {
-            source: "id2",
-            target: "id3"
-          },
-          {
-            source: "id1",
-            target: "id4"
-          },
-          {
-            source: "id1",
-            target: "id3"
-          },
-        ]
-
-      }
+      nodes: [],
+      links: []
     }
   }
   componentDidUpdate (prevProps) {
-    if (prevProps.tweetObject !== this.props.tweetObject){
-      var text = this.props.tweetObject.retweet_count
-      console.log(this.props.tweetObject.text)
-      this.setState({myData: {
-        nodes: [
-          {
-            id: "id1",
-            name: "name1",
-            val: 20,
-            description: text
-          },
-          {
-            id: "id2",
-            name: "name2",
-            val: 10,
-            description: "I love clovers",
-          },
-          {
-            id: "id3",
-            name: "name3",
-            val: 5,
-            description: "I love clovers",
-          },
-          {
-            id: "id4",
-            name: "name4",
-            val: 1,
-            description: "I love clovers",
-          },
-          {
-            id: "id5",
-            name: "name5",
-            val: 3,
-            description: "I love clovers",
-          }
-        ],
-        links: [
-          {
-            source: "id1",
-            target: "id2"
-          },
-          {
-            source: "id1",
-            target: "id3"
-          },
-          {
-            source: "id1",
-            target: "id4"
-          },
-          {
-            source: "id1",
-            target: "id5"
-          },
-        ]
-
-      }
-    })
+    if (prevProps.tweetReplies !== this.props.tweetReplies){
+      this.makeMyDataNodes(this.props.tweetObject,this.props.tweetReplies)
+    }
   }
-}
 click = (node) => {
   if (node){
-    console.log("clicked")
     this.setState({
       focusedNode: node.id
     })
@@ -149,7 +47,6 @@ click = (node) => {
 
   handleHover = (node,prevNode) => {
     if (node){
-      console.log("i love michelle")
       this.setState({
         focusedNode: node.id
       })
@@ -164,17 +61,45 @@ click = (node) => {
   }
 }
 
-render() {
+makeMyDataNodes (tweetObject,tweetReplies) {
+  const convertReplyToNode = (reply) => {
+    return {
+      id: reply.id_str,
+      name: reply.name,
+      val: 5,
+      description: reply.text,
+    }
 
+  }
+  const convertReplyToLink = (reply) => {
+    return {
+      source: tweetObject.id_str,
+      target: reply.id_str
+    }
+  }
+  let replyNodes = tweetReplies.map(convertReplyToNode)
+  replyNodes.push({
+    id: tweetObject.id_str,
+    name: tweetObject.name,
+    val: 13, //Math.sqrt(tweetObject.favorite_count),
+    description: tweetObject.full_text,
+  })
+  let replyLinks = tweetReplies.map(convertReplyToLink)
+  this.setState({
+    nodes:replyNodes,
+    links:replyLinks
+  })
+}
+
+render() {
   return (
     <div>
     <ForceGraph2D
-    graphData={this.state.myData}
+    graphData={{nodes:this.state.nodes,links:this.state.links}}
     nodeColor={this.myColor}
     onNodeHover={this.handleHover}
     onNodeClick={this.click}
     nodeLabel={this.label}
-    enableZoomPanInteraction= {false}
     />
     </div>
   );

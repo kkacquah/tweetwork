@@ -28,13 +28,12 @@ class GraphComponent extends Component {
   }
   async collectTweetReplies (screenName,idString,numberOfRequests,cursor = null) {
   try {
-    console.log("Request: ", numberOfRequests)
-    if ((numberOfRequests) === 0){
+    if ((numberOfRequests) == 0){
       return []
     } else{
       let requestReplies =  await getTweetReplies(screenName,idString,cursor)
       let recursiveReplies = await this.collectTweetReplies(screenName,idString,numberOfRequests-1,requestReplies[requestReplies.length - 1].id_str)
-      let totalReplies = requestReplies.concat(requestReplies,recursiveReplies)
+      let totalReplies = requestReplies.concat(recursiveReplies)
       return totalReplies
 
     }
@@ -47,14 +46,17 @@ class GraphComponent extends Component {
     var newTweetReplies = [];
     this.collectTweetReplies(name,idString,numberOfRequests)
     .then((newTweetReplies)=> {
-      console.log(newTweetReplies)
+      let newTweetObjects = newTweetReplies.map((newTweetReply) => createTweetDisplayObject(newTweetReply))
+      this.setState({
+        focusedTweetReplies: newTweetObjects
+      })
     })
   }
   focus = (id) => {
     this.setState({
       focusedTweet: id
     })
-    this.loadTweetReplies(this.state.screenName,this.state.tweetObjects[id].id_str,50)//necessary to load grapg
+    this.loadTweetReplies(this.state.screenName,this.state.tweetObjects[id].id_str,10)//necessary to load grapg
   }
   handleScroll = (e) => {
     const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
