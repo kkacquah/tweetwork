@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import TwitterWindow from './TwitterWindow.js'
 import GraphComponent from './GraphComponent.js'
 import './App.css';
 

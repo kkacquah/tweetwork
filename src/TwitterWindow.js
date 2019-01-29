@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
-import {GenericScrollBox} from 'react-scroll-box'; // ES6
 import Tweet from './Tweet';
 import ReactLoading from 'react-loading';
-
+import SearchBar from './SearchBar';
 const styles = {
   twitterWindow:{
     marginLeft: '20px',
     minHeight: '500px',
     height: '90%',
     width: '200px',
-    position:'absolute',
     backgroundColor: 'White',
     flexDirection: 'row',
     overflow:'scroll',
@@ -29,13 +27,11 @@ const styles = {
 //var tweetObjects = getTweetsFromUser("realDonaldTrump").map((tweetObject) => createTweetDisplayObject(tweetObject));
 
 class TwitterWindow extends Component {
-  constructor(props) {
-    super(props);
-  }
   render() {
     return (
       <div style={styles.twitterWindow} onScroll= {this.handleScroll}>
-          {this.props.tweetObjects.map((value,i) => <Tweet focusedTweet={this.props.focusedTweet} id={i} onMouseEnter={this.props.focus} tweetObject = {value}/>)}
+        <SearchBar/>
+          {this.props.tweetObjects.map((value,i) => <Tweet focusedTweet={this.props.focusedTweet} key={value.id_str} id={i} onMouseEnter={this.props.focus} tweetObject = {value}/>)}
 
           { this.props.isLoading ?
             <div style={{height:50}}>

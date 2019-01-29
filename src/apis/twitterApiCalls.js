@@ -27,7 +27,6 @@ export function getTweetsFromUser (screenName,maxId=null) {
   })
   .catch((error) => {
     console.log(error);
-    return createTweetDisplayObject(exampleTweets)
   });
 }
 //expects fn() to throw if it failed
@@ -52,10 +51,9 @@ export function getTweetReplies (screenName,tweetId,maxId) {
     }
   })
   .then((response) => {
-    return response.data.statuses.filter(tweet=>(tweet.in_reply_to_status_id_str ==tweetId))
+    return response.data.statuses.filter(tweet=>(tweet.in_reply_to_status_id_str === tweetId))
   })
   .catch((error) => {
-    console.log(error);
-    return createTweetDisplayObject(exampleTweets)
+    console.log(error)
   });
 }

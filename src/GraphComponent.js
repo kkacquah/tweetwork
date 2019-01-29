@@ -28,12 +28,13 @@ class GraphComponent extends Component {
   }
   async collectTweetReplies (screenName,idString,numberOfRequests,cursor = null) {
   try {
-    if ((numberOfRequests) == 0){
+    console.log("Request: ", numberOfRequests)
+    if ((numberOfRequests) === 0){
       return []
     } else{
       let requestReplies =  await getTweetReplies(screenName,idString,cursor)
       let recursiveReplies = await this.collectTweetReplies(screenName,idString,numberOfRequests-1,requestReplies[requestReplies.length - 1].id_str)
-      let totalReplies = requestReplies.concat(recursiveReplies)
+      let totalReplies = requestReplies.concat(requestReplies,recursiveReplies)
       return totalReplies
 
     }
@@ -43,13 +44,9 @@ class GraphComponent extends Component {
   }
 }
   loadTweetReplies(name,idString,numberOfRequests=10){
-    var newTweetReplies = [];
     this.collectTweetReplies(name,idString,numberOfRequests)
     .then((newTweetReplies)=> {
-      let newTweetObjects = newTweetReplies.map((newTweetReply) => createTweetDisplayObject(newTweetReply))
-      this.setState({
-        focusedTweetReplies: newTweetObjects
-      })
+      console.log(newTweetReplies)
     })
   }
   focus = (id) => {

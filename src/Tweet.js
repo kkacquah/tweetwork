@@ -1,7 +1,4 @@
 import React, { Component } from 'react';
-import {GenericScrollBox} from 'react-scroll-box'; // ES6
-import {createTweetDisplayObject} from './helpers/loadTweetObject';
-import {exampleTweets} from './apis/exampleTweets';
 import twitterVerifiedSymbol from './assets/images/twitterVerifiedSymbol.png'
 
 const styles = {
@@ -64,11 +61,8 @@ const styles = {
   }
 }
 class Tweet extends Component {
-  constructor(props) {
-    super(props);
-  }
   cardStyle(){
-    if (this.props.focusedTweet == this.props.id){
+    if (this.props.focusedTweet === this.props.id){
       return styles.twitterCardFocused
     } else {
       return styles.twitterCard
@@ -81,7 +75,7 @@ class Tweet extends Component {
     return (
       <div style={this.cardStyle()} onMouseEnter={this.handleOnMouseEnter}>
         <div style={{marginTop:0}}>
-          <img style={{borderRadius:'50%'}} width="20" height="20" src={this.props.tweetObject.profile_image_url} alt="profile-image" />
+          <img style={{borderRadius:'50%'}} width="20" height="20" src={this.props.tweetObject.profile_image_url} alt="avatar" />
           </div>
         <div >
         <div>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ForceGraph2D, ForceGraph3D, ForceGraphVR } from 'react-force-graph';
+import { ForceGraph2D} from 'react-force-graph';
 
 
 
@@ -27,7 +27,7 @@ click = (node) => {
 
   label = (node) => {
     if (this.state.focusedNode){
-      if (this.state.focusedNode==node.id){
+      if (this.state.focusedNode===node.id){
         return node.description
       }
     }
@@ -35,7 +35,7 @@ click = (node) => {
 
   myColor = (node) => {
     if (this.state.focusedNode){
-      if (this.state.focusedNode==node.id){
+      if (this.state.focusedNode===node.id){
         return "#1DA1F2"
       } else {
         return "#657786"
@@ -52,7 +52,7 @@ click = (node) => {
       })
     }
     if (prevNode){
-      if (prevNode.id == this.state.focusedNode){
+      if (prevNode.id === this.state.focusedNode){
         this.setState({
           focusedNode: null
         }
@@ -100,6 +100,7 @@ render() {
     onNodeHover={this.handleHover}
     onNodeClick={this.click}
     nodeLabel={this.label}
+    dagMode={"radialout"}
     />
     </div>
   );
