@@ -17,7 +17,7 @@ class GraphComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name:"realDonaldTrump",
+      screenName:"realDonaldTrump",
       focusedTweet: 0,
       focusedTweetReplies: [],
       tweetObjects: [],
@@ -26,20 +26,35 @@ class GraphComponent extends Component {
       cursor: null
     }
   }
-  loadTweetReplies(id){
-    getTweetReplies(this.state.name,this.state.tweetObjects[id].id_str)
-    .then((tweetObjs)=> {
-      var newTweetReplies = tweetObjs.map((tweetObject) => createTweetDisplayObject(tweetObject));
-      this.setState({
-          focusedTweetReplies: newTweetReplies
-        })
-  })
+  async collectTweetReplies (screenName,idString,numberOfRequests,cursor = null) {
+  try {
+    console.log("Request: ", numberOfRequests)
+    if ((numberOfRequests) === 0){
+      return []
+    } else{
+      let requestReplies =  await getTweetReplies(screenName,idString,cursor)
+      let recursiveReplies = await this.collectTweetReplies(screenName,idString,numberOfRequests-1,requestReplies[requestReplies.length - 1].id_str)
+      let totalReplies = requestReplies.concat(requestReplies,recursiveReplies)
+      return totalReplies
+
+    }
+
+  } catch (error) {
+    console.error(error)
+  }
 }
+  loadTweetReplies(name,idString,numberOfRequests=10){
+    var newTweetReplies = [];
+    this.collectTweetReplies(name,idString,numberOfRequests)
+    .then((newTweetReplies)=> {
+      console.log(newTweetReplies)
+    })
+  }
   focus = (id) => {
     this.setState({
       focusedTweet: id
     })
-    this.loadTweetReplies(id)
+    this.loadTweetReplies(this.state.screenName,this.state.tweetObjects[id].id_str,50)//necessary to load grapg
   }
   handleScroll = (e) => {
     const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
@@ -53,39 +68,37 @@ class GraphComponent extends Component {
   }
 
   loadTweetObjects(){
-    getTweetsFromUser(this.state.name,this.state.cursor)
+    getTweetsFromUser(this.state.screenName,this.state.cursor)
     .then((tweetObjs)=> {
       var newTweetObjects = tweetObjs.map((tweetObject) => createTweetDisplayObject(tweetObject));
       var lastTweetId = newTweetObjects[newTweetObjects.length-1].id_str
       this.setState({
-          tweetObjects: this.state.tweetObjects.concat(newTweetObjects),
-          cursor:lastTweetId,
-          isLoading: false,
-          hasMore: false
-        })
+        tweetObjects: this.state.tweetObjects.concat(newTweetObjects),
+        cursor:lastTweetId,
+        isLoading: false,
+        hasMore: false
+      })
     })
   }
 
   componentDidMount () {
     this.loadTweetObjects()
- }
+  }
 
   render() {
-    console.log(this.state.focusedTweet)
-    console.log(this.state.focusedTweetReplies)
     return (
       <div style={styles.GraphBackground}>
 
-        <Playground
-        tweetObject={this.state.tweetObjects[this.state.focusedTweet]}
-        tweetReplies={this.state.focusedTweetReplies}
-        />
-        <TwitterWindow
-          tweetObjects={this.state.tweetObjects}
-          handleScroll={this.handleScroll}
-          isLoading={this.state.isLoading}
-          focus = {this.focus}
-          focusedTweet={this.state.focusedTweet}/>
+      <Playground
+      tweetObject={this.state.tweetObjects[this.state.focusedTweet]}
+      tweetReplies={this.state.focusedTweetReplies}
+      />
+      <TwitterWindow
+      tweetObjects={this.state.tweetObjects}
+      handleScroll={this.handleScroll}
+      isLoading={this.state.isLoading}
+      focus = {this.focus}
+      focusedTweet={this.state.focusedTweet}/>
       </div>
     );
   }

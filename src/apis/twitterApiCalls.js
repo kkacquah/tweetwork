@@ -23,7 +23,6 @@ export function getTweetsFromUser (screenName,maxId=null) {
     }
   })
   .then((response) => {
-    console.log(response);
     return response.data
   })
   .catch((error) => {
@@ -31,13 +30,18 @@ export function getTweetsFromUser (screenName,maxId=null) {
     return createTweetDisplayObject(exampleTweets)
   });
 }
-export function getTweetReplies (screenName,tweetId) {
+//expects fn() to throw if it failed
+//if it runs out of retries, poll() will resolve to an rejected promise, containing the latest error
+export function getTweetReplies (screenName,tweetId,maxId) {
   var params = {
-    q: "to:"+ screenName,
-    since_id:tweetId,
-    count: 100
+    q: "to:"+screenName,
+    since_id: tweetId,
+    count: 100,
+    result_type:'recent'
   }
-  console.log(tweetId)
+  if (maxId){
+    params.max_id = maxId
+  }
   return axios({
     method: 'get',
     baseURL: baseUrl,
@@ -48,10 +52,7 @@ export function getTweetReplies (screenName,tweetId) {
     }
   })
   .then((response) => {
-    console.log(tweetId)
-    console.log(response.data.statuses.map((tweet) => tweet.in_reply_to_status_id_str))
-
-    return response.data.statuses.filter(tweet=>(tweet.in_reply_to_status_id_str ===tweetId))
+    return response.data.statuses.filter(tweet=>(tweet.in_reply_to_status_id_str ==tweetId))
   })
   .catch((error) => {
     console.log(error);
