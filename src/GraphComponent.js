@@ -55,6 +55,16 @@ class GraphComponent extends Component {
     })
     this.loadTweetReplies(this.state.screenName,this.state.tweetObjects[id].id_str,10)//necessary to load grapg
   }
+  onFocusSearchBar = (id) => {
+    this.setState({
+      focusedTweet: null
+    })
+  }
+  onSelectSearchBar = (value) => {
+    this.setState({
+      screenName: value
+    })
+  }
   handleScroll = (e) => {
     const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
     if (bottom && this.state.hasMore) {
@@ -78,6 +88,9 @@ class GraphComponent extends Component {
         hasMore: false
       })
     })
+    .catch((error) => {
+      console.log(error)
+    })
   }
 
   componentDidMount () {
@@ -85,6 +98,7 @@ class GraphComponent extends Component {
   }
 
   render() {
+    console.log(this.state.screenName)
     return (
       <div style={styles.GraphBackground}>
 
@@ -97,6 +111,8 @@ class GraphComponent extends Component {
       handleScroll={this.handleScroll}
       isLoading={this.state.isLoading}
       focus = {this.focus}
+      onFocusSearchBar = {this.onFocusSearchBar}
+      onSelectSearchBar= {this.onSelectSearchBar}
       focusedTweet={this.state.focusedTweet}/>
       </div>
     );
