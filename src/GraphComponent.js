@@ -7,7 +7,7 @@ import {getTweetReplies} from './apis/twitterApiCalls';
 
 const styles = {
   GraphBackground:{
-    backgroundColor: '#E1E8ED',
+    backgroundColor: '#657786',
     width:'100%',
     height:'100%',
     position:'absolute'
