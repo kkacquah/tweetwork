@@ -119,7 +119,7 @@ class GraphComponent extends Component {
     console.log("screen name: ",this.state.screenName)
     return (
       <div style={styles.GraphBackground}>
-
+      <Playground/>
       <TwitterWindow
       scrollRef = {this.myRef}
       tweetObjects={this.state.tweetObjects}

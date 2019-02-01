@@ -1,7 +1,26 @@
 import React, { Component } from 'react';
 import { ForceGraph2D} from 'react-force-graph';
 
-
+const data = {
+    "nodes": [
+        {
+          "id": "id1",
+          "name": "name1",
+          "val": 1
+        },
+        {
+          "id": "id2",
+          "name": "name2",
+          "val": 10
+        }
+    ],
+    "links": [
+        {
+            "source": "id1",
+            "target": "id2"
+        }
+    ]
+}
 
 class Playground extends Component
 {
@@ -38,10 +57,10 @@ click = (node) => {
       if (this.state.focusedNode===node.id){
         return "#1DA1F2"
       } else {
-        return "#657786"
+        return "#E1E8ED"
       }
     } else {
-      return "#657786"
+      return "#E1E8ED"
     }
   }
 
@@ -95,7 +114,7 @@ render() {
   return (
     <div>
     <ForceGraph2D
-    graphData={{nodes:this.state.nodes,links:this.state.links}}
+    graphData={data}
     nodeColor={this.myColor}
     onNodeHover={this.handleHover}
     onNodeClick={this.click}
