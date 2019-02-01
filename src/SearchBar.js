@@ -51,7 +51,6 @@ class SearchBar extends Component {
     }
   searchUsers
   render() {
-    console.log('rerendering with value', this.state.value)
     return (
       <div>
       <div style={styles.Outer}>
