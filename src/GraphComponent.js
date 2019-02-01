@@ -26,6 +26,7 @@ class GraphComponent extends Component {
       cursor: null
     }
   }
+  myRef = React.createRef()
   async collectTweetReplies (screenName,idString,numberOfRequests,cursor = null) {
   try {
     console.log("Request: ", numberOfRequests)
@@ -44,10 +45,10 @@ class GraphComponent extends Component {
   }
 }
   loadTweetReplies(name,idString,numberOfRequests=10){
-    this.collectTweetReplies(name,idString,numberOfRequests)
-    .then((newTweetReplies)=> {
-      console.log(newTweetReplies)
-    })
+    // this.collectTweetReplies(name,idString,numberOfRequests)
+    // .then((newTweetReplies)=> {
+    //   console.log(newTweetReplies)
+    // })
   }
   focus = (id) => {
     this.setState({
@@ -61,9 +62,8 @@ class GraphComponent extends Component {
     })
   }
   onSelectSearchBar = (value) => {
-    this.setState({
-      screenName: value
-    })
+    window.scrollTo(0, this.myRef.offsetTop)
+    this.getTweetObjects(value)
   }
   handleScroll = (e) => {
     const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
@@ -75,18 +75,36 @@ class GraphComponent extends Component {
     }
 
   }
-
-  loadTweetObjects(){
-    getTweetsFromUser(this.state.screenName,this.state.cursor)
+  getTweetObjects(screenName){
+    getTweetsFromUser(screenName,null)
     .then((tweetObjs)=> {
       var newTweetObjects = tweetObjs.map((tweetObject) => createTweetDisplayObject(tweetObject));
       var lastTweetId = newTweetObjects[newTweetObjects.length-1].id_str
+      console.log("newTweetObjects", newTweetObjects)
       this.setState({
-        tweetObjects: this.state.tweetObjects.concat(newTweetObjects),
+        screenName: screenName,
+        tweetObjects: newTweetObjects,
         cursor:lastTweetId,
         isLoading: false,
-        hasMore: false
+        focusedTweetReplies: []
       })
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  }
+  loadTweetObjects(){
+    getTweetsFromUser(this.state.screenName,this.state.cursor)
+    .then((tweetObjs)=> {
+        var newTweetObjects = tweetObjs.map((tweetObject) => createTweetDisplayObject(tweetObject));
+        var lastTweetId = newTweetObjects[newTweetObjects.length-1].id_str
+        this.setState({
+          tweetObjects: this.state.tweetObjects.concat(newTweetObjects),
+          cursor:lastTweetId,
+          isLoading: false,
+          hasMore: true
+        })
+
     })
     .catch((error) => {
       console.log(error)
@@ -94,19 +112,16 @@ class GraphComponent extends Component {
   }
 
   componentDidMount () {
-    this.loadTweetObjects()
+    this.getTweetObjects(this.state.screenName)
   }
 
   render() {
-    console.log(this.state.screenName)
+    console.log("screen name: ",this.state.screenName)
     return (
       <div style={styles.GraphBackground}>
 
-      <Playground
-      tweetObject={this.state.tweetObjects[this.state.focusedTweet]}
-      tweetReplies={this.state.focusedTweetReplies}
-      />
       <TwitterWindow
+      scrollRef = {this.myRef}
       tweetObjects={this.state.tweetObjects}
       handleScroll={this.handleScroll}
       isLoading={this.state.isLoading}

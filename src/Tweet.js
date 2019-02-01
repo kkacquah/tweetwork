@@ -11,6 +11,14 @@ const styles = {
     padding:5
   },
   twitterCardFocused:{
+    backgroundColor: ' #E1E8ED',
+    borderBottom: '1px solid #E1E8ED',
+    flexDirection: 'row',
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding:5
+  },
+  twitterCardHovered:{
     backgroundColor: ' #F5F8FA',
     borderBottom: '1px solid #E1E8ED',
     flexDirection: 'row',
@@ -61,19 +69,31 @@ const styles = {
   }
 }
 class Tweet extends Component {
+  constructor(props) {
+        super(props)
+        this.state={hovered:false }
+      }
   cardStyle(){
     if (this.props.focusedTweet === this.props.id){
       return styles.twitterCardFocused
+    } else if (this.state.hovered){
+      return styles.twitterCardHovered
     } else {
       return styles.twitterCard
     }
   }
+  handleOnClick = () => {
+    this.props.onClick(this.props.id);
+  }
   handleOnMouseEnter = () => {
-    this.props.onMouseEnter(this.props.id);
+    this.setState({hovered:true})
+  }
+  handleOnMouseLeave = () => {
+    this.setState({hovered:false})
   }
   render() {
     return (
-      <div style={this.cardStyle()} onMouseEnter={this.handleOnMouseEnter}>
+      <div style={this.cardStyle()} onClick={this.handleOnClick} onMouseEnter={this.handleOnMouseEnter} onMouseLeave={this.handleOnMouseLeave}>
         <div style={{marginTop:0}}>
           <img style={{borderRadius:'50%'}} width="20" height="20" src={this.props.tweetObject.profile_image_url} alt="avatar" />
           </div>

@@ -7,7 +7,6 @@ const styles = {
     overflow:'scroll',
     justifyContent:'center',
     height:'100%',
-    minHeight: '500px',
     width: '200px',
     borderRadius: 5,
   },
@@ -19,7 +18,6 @@ const styles = {
     borderRadius: 5,
     top:"2%",
     position: 'fixed',
-
   },
   loadingStyle:{
     margin:5,
@@ -32,12 +30,17 @@ const styles = {
 //var tweetObjects = getTweetsFromUser("realDonaldTrump").map((tweetObject) => createTweetDisplayObject(tweetObject));
 
 class TwitterWindow extends Component {
+  constructor(props) {
+        super(props)
+        this.myRef = React.createRef()   // Create a ref object
+    }
   render() {
+    console.log("re renderingTwitter window")
     return (
         <div style={styles.window} >
          <SearchBar onSelect= {this.props.onSelectSearchBar} focusedTweet= {this.props.focusedTweet} onFocus={this.props.onFocusSearchBar}/>
-        <div style={styles.twitterWindow} onScroll= {this.handleScroll}>
-          {this.props.tweetObjects.map((value,i) => <Tweet focusedTweet={this.props.focusedTweet} key={value.id_str} id={i} onMouseEnter={this.props.focus} tweetObject = {value}/>)}
+        <div ref={this.props.myRef} style={styles.twitterWindow} ref={this.myRef} onScroll= {this.props.handleScroll}>
+          {this.props.tweetObjects.map((value,i) => <Tweet focusedTweet={this.props.focusedTweet} id={i} onClick={this.props.focus} tweetObject = {value}/>)}
 
           { this.props.isLoading ?
             <div style={{height:50}}>

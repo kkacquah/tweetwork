@@ -7,7 +7,7 @@ import axios from 'axios'
 export function getTweetsFromUser (screenName,maxId=null) {
   var params = {
     screen_name: screenName,
-    count: 10,
+    count: 11,
     tweet_mode: 'extended'
   }
   if (maxId){
@@ -23,7 +23,11 @@ export function getTweetsFromUser (screenName,maxId=null) {
     }
   })
   .then((response) => {
-    return response.data
+    if(response.data[1].id_str == maxId){
+      return null
+    } else {
+      return response.data.slice(1,11)
+    }
   })
   .catch((error) => {
     console.log(error);
