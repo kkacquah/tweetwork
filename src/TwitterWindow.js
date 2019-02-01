@@ -31,11 +31,9 @@ const styles = {
 
 class TwitterWindow extends Component {
   constructor(props) {
-        super(props)
-        this.myRef = React.createRef()   // Create a ref object
+        super(props)   // Create a ref object
     }
   render() {
-    console.log("re renderingTwitter window")
     return (
         <div style={styles.window} >
          <SearchBar onSelect= {this.props.onSelectSearchBar} focusedTweet= {this.props.focusedTweet} onFocus={this.props.onFocusSearchBar}/>

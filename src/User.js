@@ -66,11 +66,9 @@ class User extends Component {
     this.props.onMouseEnter(this.props.id);
   }
   handleOnClick = () => {
-    console.log("clicked")
     this.props.onClick(this.props.id);
   }
   render() {
-    console.log('rerendering with focused user', this.props.focused)
     return (
         <div
         style={this.userStyle()}

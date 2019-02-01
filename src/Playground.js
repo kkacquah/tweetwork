@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { ForceGraph2D} from 'react-force-graph';
+import './Playground.css';
 
-const data = {
+const nodes = {
     "nodes": [
         {
           "id": "id1",
@@ -21,13 +22,16 @@ const data = {
         }
     ]
 }
-
 class Playground extends Component
 {
   constructor(props) {
     super(props);
     this.state = {
-      focusedNode: null,
+      focusedNodeId: null,
+      images: {
+        "id1":"https://pbs.twimg.com/profile_images/874276197357596672/kUuht00m_400x400.jpg",
+        "id2":"https://pbs.twimg.com/profile_images/508960761826131968/LnvhR8ED_400x400.png"
+      },//mapping of nodeIds to image urls
       nodes: [],
       links: []
     }
@@ -39,11 +43,20 @@ class Playground extends Component
   }
 click = (node) => {
   if (node){
-    this.setState({
-      focusedNode: node.id
-    })
-  }}
 
+  }}
+  nodeCanvasObject = ({ id, x, y }, ctx) => {
+          var img = new Image();
+          img.src = this.state.images[id]
+          ctx.strokeStyle=this.myColor(id)
+          ctx.beginPath();
+          ctx.arc(x, y, 6, 0, 2 * Math.PI, false)
+          var img = new Image();
+          img.src = this.state.images[id]
+          ctx.lineWidth = 3;
+          ctx.drawImage(img, x-5, y-5,10,10); // rectangle;
+          ctx.stroke();
+  }
   label = (node) => {
     if (this.state.focusedNode){
       if (this.state.focusedNode===node.id){
@@ -52,30 +65,29 @@ click = (node) => {
     }
   }
 
-  myColor = (node) => {
-    if (this.state.focusedNode){
-      if (this.state.focusedNode===node.id){
+  myColor = (id) => {
+    if (this.state.focusedNodeId){
+      if (this.state.focusedNodeId===id){
         return "#1DA1F2"
       } else {
-        return "#E1E8ED"
+        return "#FFFFFF"
       }
     } else {
-      return "#E1E8ED"
+      return "#FFFFFF"
     }
   }
 
   handleHover = (node,prevNode) => {
     if (node){
       this.setState({
-        focusedNode: node.id
+        focusedNodeId: node.id
       })
     }
     if (prevNode){
-      if (prevNode.id === this.state.focusedNode){
+      if (prevNode.id === this.state.focusedNodeId){
         this.setState({
-          focusedNode: null
-        }
-      )
+          focusedNodeId: null
+        })
     }
   }
 }
@@ -90,6 +102,7 @@ makeMyDataNodes (tweetObject,tweetReplies) {
     }
 
   }
+
   const convertReplyToLink = (reply) => {
     return {
       source: tweetObject.id_str,
@@ -114,12 +127,12 @@ render() {
   return (
     <div>
     <ForceGraph2D
-    graphData={data}
+    nodeCanvasObject={this.nodeCanvasObject}
+    graphData={nodes}
     nodeColor={this.myColor}
     onNodeHover={this.handleHover}
     onNodeClick={this.click}
     nodeLabel={this.label}
-    dagMode={"radialout"}
     />
     </div>
   );

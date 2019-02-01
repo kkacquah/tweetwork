@@ -29,7 +29,6 @@ class GraphComponent extends Component {
   myRef = React.createRef()
   async collectTweetReplies (screenName,idString,numberOfRequests,cursor = null) {
   try {
-    console.log("Request: ", numberOfRequests)
     if ((numberOfRequests) === 0){
       return []
     } else{
@@ -44,17 +43,17 @@ class GraphComponent extends Component {
     console.error(error)
   }
 }
-  loadTweetReplies(name,idString,numberOfRequests=10){
-    // this.collectTweetReplies(name,idString,numberOfRequests)
-    // .then((newTweetReplies)=> {
-    //   console.log(newTweetReplies)
-    // })
+  loadTweetReplies(name,idString,numberOfRequests=10,focusedId){
+    this.collectTweetReplies(name,idString,numberOfRequests)
+    .then((newTweetReplies)=> {
+      this.setState({
+        focusedTweet: focusedId,
+        focusedTweetReplies:newTweetReplies
+      })
+    })
   }
   focus = (id) => {
-    this.setState({
-      focusedTweet: id
-    })
-    this.loadTweetReplies(this.state.screenName,this.state.tweetObjects[id].id_str,10)//necessary to load grapg
+    this.loadTweetReplies(this.state.screenName,this.state.tweetObjects[id].id_str,1,id)//necessary to load grapg
   }
   onFocusSearchBar = (id) => {
     this.setState({
@@ -80,7 +79,6 @@ class GraphComponent extends Component {
     .then((tweetObjs)=> {
       var newTweetObjects = tweetObjs.map((tweetObject) => createTweetDisplayObject(tweetObject));
       var lastTweetId = newTweetObjects[newTweetObjects.length-1].id_str
-      console.log("newTweetObjects", newTweetObjects)
       this.setState({
         screenName: screenName,
         tweetObjects: newTweetObjects,
@@ -116,7 +114,6 @@ class GraphComponent extends Component {
   }
 
   render() {
-    console.log("screen name: ",this.state.screenName)
     return (
       <div style={styles.GraphBackground}>
       <Playground/>
