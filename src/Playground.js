@@ -50,9 +50,10 @@ click = (node) => {
           img.src = this.state.images[id]
           ctx.strokeStyle=this.myColor(id)
           ctx.beginPath();
-          ctx.arc(x, y, 7, 0, 2 * Math.PI, false)
+          ctx.arc(x, y, 6, 0, 2 * Math.PI, false)
           var img = new Image();
           img.src = this.state.images[id]
+          ctx.lineWidth = 3;
           ctx.drawImage(img, x-5, y-5,10,10); // rectangle;
           ctx.stroke();
   }
