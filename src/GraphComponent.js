@@ -7,7 +7,7 @@ import {getTweetReplies} from './apis/twitterApiCalls';
 
 const styles = {
   GraphBackground:{
-    backgroundColor: '#657786',
+    backgroundColor: '#F5F8FA',
     width:'100%',
     height:'100%',
     position:'absolute'
@@ -33,15 +33,21 @@ class GraphComponent extends Component {
       return []
     } else{
       let requestReplies =  await getTweetReplies(screenName,idString,cursor)
-      let recursiveReplies = await this.collectTweetReplies(screenName,idString,numberOfRequests-1,requestReplies[requestReplies.length - 1].id_str)
-      let totalReplies = requestReplies.concat(requestReplies,recursiveReplies)
-      return totalReplies
+      console.log("requestReplies: ", requestReplies)
+      if (requestReplies.length != 0){
+        let recursiveReplies = await this.collectTweetReplies(screenName,idString,numberOfRequests-1,requestReplies[requestReplies.length - 1].id_str)
+        console.log("recursiveReplies: ", recursiveReplies)
+        let totalReplies = requestReplies.concat(recursiveReplies)
+        console.log("totalReplies: ", totalReplies)
+        return totalReplies
+      } else{
+        return await this.collectTweetReplies(screenName,idString,numberOfRequests-1,cursor)
+      }
 
     }
-
-  } catch (error) {
-    console.error(error)
-  }
+    } catch (error) {
+        console.error(error)
+      }
 }
   loadTweetReplies(name,idString,numberOfRequests=10,focusedId){
     this.collectTweetReplies(name,idString,numberOfRequests)
@@ -53,7 +59,7 @@ class GraphComponent extends Component {
     })
   }
   focus = (id) => {
-    this.loadTweetReplies(this.state.screenName,this.state.tweetObjects[id].id_str,1,id)//necessary to load grapg
+    this.loadTweetReplies(this.state.screenName,this.state.tweetObjects[id].id_str,20,id)//necessary to load grapg
   }
   onFocusSearchBar = (id) => {
     this.setState({
@@ -114,9 +120,12 @@ class GraphComponent extends Component {
   }
 
   render() {
+    console.log(this.state.focusedTweetReplies)
     return (
       <div style={styles.GraphBackground}>
-      <Playground/>
+      <Playground
+      tweetObject={this.state.tweetObjects[this.state.focusedTweet]}
+      tweetReplies={this.state.focusedTweetReplies}/>
       <TwitterWindow
       scrollRef = {this.myRef}
       tweetObjects={this.state.tweetObjects}

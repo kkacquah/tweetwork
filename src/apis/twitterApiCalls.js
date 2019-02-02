@@ -54,8 +54,16 @@ export function getTweetReplies (screenName,tweetId,maxId) {
       Authorization: bearerToken
     }
   })
+  .then ((response) =>{
+    console.log("response: ", response)
+    if(response.data.statuses[1].id_str == maxId){
+      return []
+    } else {
+      return response.data.statuses.slice(1)
+    }
+  })
   .then((response) => {
-    return response.data.statuses.filter(tweet=>(tweet.in_reply_to_status_id_str === tweetId))
+    return response.filter(tweet=>(tweet.in_reply_to_status_id_str === tweetId))
   })
   .catch((error) => {
     console.log(error)
