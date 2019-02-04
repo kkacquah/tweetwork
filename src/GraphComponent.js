@@ -23,43 +23,25 @@ class GraphComponent extends Component {
       tweetObjects: [],
       hasMore: true,
       isLoading: false,
-      cursor: null
+      cursor: null,
+      isLoadingGraph:true
     }
   }
-  myRef = React.createRef()
-  async collectTweetReplies (screenName,idString,numberOfRequests,cursor = null) {
-  try {
-    if ((numberOfRequests) === 0){
-      return []
-    } else{
-      let requestReplies =  await getTweetReplies(screenName,idString,cursor)
-      console.log("requestReplies: ", requestReplies)
-      if (requestReplies.length != 0){
-        let recursiveReplies = await this.collectTweetReplies(screenName,idString,numberOfRequests-1,requestReplies[requestReplies.length - 1].id_str)
-        console.log("recursiveReplies: ", recursiveReplies)
-        let totalReplies = requestReplies.concat(recursiveReplies)
-        console.log("totalReplies: ", totalReplies)
-        return totalReplies
-      } else{
-        return await this.collectTweetReplies(screenName,idString,numberOfRequests-1,cursor)
-      }
-
-    }
-    } catch (error) {
-        console.error(error)
-      }
-}
   loadTweetReplies(name,idString,numberOfRequests=10,focusedId){
-    this.collectTweetReplies(name,idString,numberOfRequests)
+     this.setState({
+        isLoadingGraph:true
+      })
+    getTweetReplies(name,idString,numberOfRequests)
     .then((newTweetReplies)=> {
       this.setState({
         focusedTweet: focusedId,
-        focusedTweetReplies:newTweetReplies
+        focusedTweetReplies:newTweetReplies,
+        isLoadingGraph:false
       })
     })
   }
   focus = (id) => {
-    this.loadTweetReplies(this.state.screenName,this.state.tweetObjects[id].id_str,20,id)//necessary to load grapg
+    this.loadTweetReplies(this.state.screenName,this.state.tweetObjects[id].id_str,30,id)//necessary to load grapg
   }
   onFocusSearchBar = (id) => {
     this.setState({
@@ -67,7 +49,6 @@ class GraphComponent extends Component {
     })
   }
   onSelectSearchBar = (value) => {
-    window.scrollTo(0, this.myRef.offsetTop)
     this.getTweetObjects(value)
   }
   handleScroll = (e) => {
@@ -120,10 +101,14 @@ class GraphComponent extends Component {
   }
 
   render() {
-    console.log(this.state.focusedTweetReplies)
+    console.log("this.state.isLoadingGraph: ",this.state.isLoadingGraph)
     return (
       <div style={styles.GraphBackground}>
-      <Playground
+      {this.state.isLoadingGraph ?
+       `Loading` :
+        null }
+      
+          <Playground
       tweetObject={this.state.tweetObjects[this.state.focusedTweet]}
       tweetReplies={this.state.focusedTweetReplies}/>
       <TwitterWindow

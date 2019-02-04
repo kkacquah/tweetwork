@@ -37,33 +37,18 @@ export function getTweetsFromUser (screenName,maxId=null) {
 //if it runs out of retries, poll() will resolve to an rejected promise, containing the latest error
 export function getTweetReplies (screenName,tweetId,maxId) {
   var params = {
-    q: "to:"+screenName,
-    since_id: tweetId,
-    count: 100,
-    result_type:'recent'
-  }
-  if (maxId){
-    params.max_id = maxId
+    screen_name: screenName,
+    tweetId: tweetId,
+    tries: 10,
   }
   return axios({
     method: 'get',
-    baseURL: baseUrl,
-    url: baseUrl + 'search/tweets.json',
-    params: params,
-    headers: {
-      Authorization: bearerToken
-    }
+    url: `http://localhost:5000/getTweetReplySentiment`,
+    params: params
   })
   .then ((response) =>{
     console.log("response: ", response)
-    if(response.data.statuses[1].id_str == maxId){
-      return []
-    } else {
-      return response.data.statuses.slice(1)
-    }
-  })
-  .then((response) => {
-    return response.filter(tweet=>(tweet.in_reply_to_status_id_str === tweetId))
+    return response.data
   })
   .catch((error) => {
     console.log(error)
