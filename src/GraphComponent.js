@@ -19,12 +19,15 @@ class GraphComponent extends Component {
     this.state = {
       screenName:"CNN",
       focusedTweet: 0,
-      focusedTweetReplies: [],
       tweetObjects: [],
       hasMore: true,
       isLoading: false,
       cursor: null,
-      isLoadingGraph:true
+      isLoadingGraph:true,
+      nodes:[],
+      links:[],
+      renderInfo:[],
+      graphData:{nodes:[],links:[]}
     }
   }
   loadTweetReplies(name,idString,numberOfRequests=10,focusedId){
@@ -33,12 +36,87 @@ class GraphComponent extends Component {
       })
     getTweetReplies(name,idString,numberOfRequests)
     .then((newTweetReplies)=> {
-      this.setState({
-        focusedTweet: focusedId,
-        focusedTweetReplies:newTweetReplies,
-        isLoadingGraph:false
-      })
+      var focusedTweetId = this.state.focusedTweet
+      this.makeMyDataNodes(this.state.tweetObjects[focusedTweetId],newTweetReplies)
     })
+  }
+  makeMyDataNodes (tweetObject,tweetReplies) {
+  	console.log("tweetObject: ",tweetObject)
+  	console.log("tweetReplies: ",tweetReplies)
+  	if(tweetObject && tweetReplies) {
+  		const convertReplyToNode = (reply) => {
+  			return {
+  				id: reply.id_str,
+  				name: reply.name,
+  				val: 5,
+  				description: reply.text,
+  			}
+  		}
+  		const convertReplyToRenderInfo = (map, reply) => {
+  					map[reply.id_str] =
+  					{
+  						image:reply.profile_image_url,
+  						num_retweets:reply.favorite_count,
+  						sentiment:reply.sentiment
+  					}
+  					return map;
+  			}
+  		const convertReplyToLink = (reply) => {
+  			return {
+  				source: reply.id_str,
+  				target: tweetObject.id_str
+  			}
+  		}
+  		const convertReplyToSeperationLink = (reply) => {
+  			var sentimentString
+  			if(reply.sentiment < 0.42){
+  					sentimentString = "lowSentiment"
+  			} else if (reply.sentiment >= 0.42 && reply.sentiment < 0.58){
+  					sentimentString = "medSentiment"
+  			} else {
+  					sentimentString = "highSentiment"
+  			}
+  			return {
+  				source: sentimentString,
+  				target: reply.id_str
+  			}
+  		}
+  		let replyNodes = tweetReplies.map(convertReplyToNode)
+  		replyNodes = replyNodes.concat([{
+  			id: tweetObject.id_str,
+  			name: tweetObject.name,
+  			val: 13, //Math.sqrt(tweetObject.favorite_count),
+  			description: tweetObject.full_text,
+  		},
+  		{
+  				id:"highSentiment"
+  		},
+  		{
+  				id:"medSentiment"
+  		},
+  		{
+  				id:"lowSentiment"
+  		}])
+  		let replyLinks = tweetReplies.map(convertReplyToLink)
+  		let seperationLinks = tweetReplies.map(convertReplyToSeperationLink)
+  		let replyRenderInfo = tweetReplies.reduce(convertReplyToRenderInfo,{})
+  		replyRenderInfo[tweetObject.id_str] = {
+  			image:tweetObject.profile_image_url,
+  			num_retweets:tweetObject.favorite_count,
+  			sentiment:0.5
+  		}
+  		this.setState({
+        graphData:{
+  			     nodes:replyNodes,
+  			     links:replyLinks.concat(seperationLinks)
+        },
+  			renderInfo:replyRenderInfo,
+        isLoadingGraph:false
+  		})
+  	} else {
+  		return
+  	}
+
   }
   focus = (id) => {
     this.loadTweetReplies(this.state.screenName,this.state.tweetObjects[id].id_str,30,id)//necessary to load grapg
@@ -107,10 +185,11 @@ class GraphComponent extends Component {
       {this.state.isLoadingGraph ?
        `Loading` :
         null }
-      
-          <Playground
-      tweetObject={this.state.tweetObjects[this.state.focusedTweet]}
-      tweetReplies={this.state.focusedTweetReplies}/>
+
+      <Playground
+      renderInfo={this.state.renderInfo}//mapping of nodeIds to image urls
+			graphData={this.state.graphData}
+      tweetObject={this.state.tweetObjects[this.state.focusedTweet]}/>
       <TwitterWindow
       scrollRef = {this.myRef}
       tweetObjects={this.state.tweetObjects}
