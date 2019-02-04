@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import TwitterWindow from './TwitterWindow.js'
-import Playground from './Playground.js'
+import TweetGraph from './TweetGraph.js'
 import {createTweetDisplayObject} from './helpers/loadTweetObject';
-import {getTweetsFromUser} from './apis/twitterApiCalls';
-import {getTweetReplies} from './apis/twitterApiCalls';
+import {getNodesAndLinks} from './helpers/graphUtils';
+import {getTweetsFromUser,getTweetReplies} from './apis/twitterApiCalls';
 
 const styles = {
   GraphBackground:{
@@ -28,8 +28,8 @@ class GraphComponent extends Component {
       links:[],
       renderInfo:[],
       sentimentPercentages: {
-    negative_percentage: 0, 
-    neutral_percentage: 0, 
+    negative_percentage: 0,
+    neutral_percentage: 0,
     positive_percentage: 0
   },
       graphData:{nodes:[],links:[]}
@@ -44,80 +44,16 @@ class GraphComponent extends Component {
       var focusedTweetId = this.state.focusedTweet
       this.makeMyDataNodes(this.state.tweetObjects[focusedTweetId],response.replies,response.percentages)
     })
+    .catch((error)=> {
+      console.log(error)
+    })
   }
   makeMyDataNodes (tweetObject,tweetReplies,sentimentPercentages) {
-  	console.log("tweetObject: ",tweetObject)
-  	console.log("tweetReplies: ",tweetReplies)
   	if(tweetObject && tweetReplies) {
-  		const convertReplyToNode = (reply) => {
-  			return {
-  				id: reply.id_str,
-  				name: reply.name,
-  				val: 5,
-  				description: reply.text,
-  			}
-  		}
-  		const convertReplyToRenderInfo = (map, reply) => {
-  					map[reply.id_str] =
-  					{
-  						image:reply.profile_image_url,
-  						num_retweets:reply.favorite_count,
-  						sentiment:reply.sentiment
-  					}
-  					return map;
-  			}
-  		const convertReplyToLink = (reply) => {
-  			return {
-  				source: reply.id_str,
-  				target: tweetObject.id_str
-  			}
-  		}
-  		const convertReplyToSeperationLink = (reply) => {
-  			var sentimentString
-  			if(reply.sentiment < 0.42){
-  					sentimentString = "lowSentiment"
-  			} else if (reply.sentiment >= 0.42 && reply.sentiment < 0.58){
-  					sentimentString = "medSentiment"
-  			} else {
-  					sentimentString = "highSentiment"
-  			}
-  			return {
-  				source: sentimentString,
-  				target: reply.id_str
-  			}
-  		}
-  		let replyNodes = tweetReplies.map(convertReplyToNode)
-  		replyNodes = replyNodes.concat([{
-  			id: tweetObject.id_str,
-  			name: tweetObject.name,
-  			val: 13, //Math.sqrt(tweetObject.favorite_count),
-  			description: tweetObject.full_text,
-  		},
-  		{
-  				id:"highSentiment"
-  		},
-  		{
-  				id:"medSentiment"
-  		},
-  		{
-  				id:"lowSentiment"
-  		}])
-  		let replyLinks = tweetReplies.map(convertReplyToLink)
-  		let seperationLinks = tweetReplies.map(convertReplyToSeperationLink)
-  		let replyRenderInfo = tweetReplies.reduce(convertReplyToRenderInfo,{})
-  		replyRenderInfo[tweetObject.id_str] = {
-  			image:tweetObject.profile_image_url,
-  			num_retweets:tweetObject.favorite_count,
-  			sentiment:0.5
-  		}
+  		let graphData = getNodesAndLinks(tweetObject,tweetReplies,sentimentPercentages)
   		this.setState({
-        graphData:{
-  			     nodes:replyNodes,
-  			     links:replyLinks.concat(seperationLinks)
-        },
-  			renderInfo:replyRenderInfo,
-        isLoadingGraph:false,
-        sentimentPercentages:sentimentPercentages
+        graphData: graphData,
+        isLoadingGraph:false
   		})
   	} else {
   		return
@@ -125,7 +61,7 @@ class GraphComponent extends Component {
 
   }
   focus = (id) => {
-    this.loadTweetReplies(this.state.screenName,this.state.tweetObjects[id].id_str,30,id)//necessary to load grapg
+    this.loadTweetReplies(this.state.screenName,this.state.tweetObjects[id].id_str,30,id)//necessary to load graph
   }
   onFocusSearchBar = (id) => {
     this.setState({
@@ -192,10 +128,8 @@ class GraphComponent extends Component {
        `Loading` :
         null }
 
-      <Playground
-      renderInfo={this.state.renderInfo}//mapping of nodeIds to image urls
+      <TweetGraph
 			graphData={this.state.graphData}
-      sentimentPercentages={this.state.sentimentPercentages}
       tweetObject={this.state.tweetObjects[this.state.focusedTweet]}/>
       <TwitterWindow
       scrollRef = {this.myRef}
