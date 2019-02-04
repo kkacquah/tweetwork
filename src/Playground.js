@@ -34,7 +34,6 @@ class Playground extends Component
 		}
 	}
 	componentDidUpdate (prevProps) {
-
 		if (prevProps.tweetReplies !== this.props.tweetReplies){
 			console.log("tweetReplies changed")
 			this.makeMyDataNodes(this.props.tweetObject,this.props.tweetReplies)
@@ -45,25 +44,35 @@ click = (node) => {
 
 	}}
 	nodeCanvasObject = ({ id, x, y }, ctx) => {
-					if (id == "lowSentiment" || id == "medSentiment" || id == "highSentiment"){
+  		if (id == "lowSentiment" || id == "medSentiment" || id == "highSentiment"){
 						ctx.fillStyle="#000000"
 						ctx.beginPath();
 						ctx.arc(x, y, 10, 0, 2 * Math.PI, false)
 						ctx.fill()
 					} else {
-						var likes = this.state.renderInfo[id].num_retweets
-						var size = likes == 0 ? 3.16 : Math.sqrt(Math.sqrt(likes*1000));
-						var radius = size*(3/5)
-						ctx.strokeStyle=this.nodeColor(id)
-						ctx.beginPath();
-						ctx.arc(x, y, radius, 0, 2 * Math.PI, false)
-						var img = new Image();
-						img.src = this.state.renderInfo[id].image
-						ctx.lineWidth = radius/2;
-						ctx.drawImage(img, x-(size/2), y-(size/2),size,size); // rectangle;
-						ctx.stroke();
+            if (id == this.props.tweetObject.id_str){
+              console.log("Here")
+              console.log(id)
+              var gradient = ctx.createLinearGradient(-100, -100, 100, 100);
+              gradient.addColorStop("0", this.sentimentToColor(0,1));
+              gradient.addColorStop("0.5" ,this.sentimentToColor(50,1));
+              gradient.addColorStop("1.0", this.sentimentToColor(100,1));
+              ctx.strokeStyle=gradient
+            } else {
+              ctx.strokeStyle=this.nodeColor(id)
+            }
+            var likes = this.props.renderInfo[id].num_retweets
+            var size = likes == 0 ? 3.16 : Math.sqrt(Math.sqrt(likes*1000));
+            var radius = size*(3/5)
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, 2 * Math.PI, false)
+            var img = new Image();
+            img.src = this.props.renderInfo[id].image
+            ctx.lineWidth = radius/2;
+            ctx.drawImage(img, x-(size/2), y-(size/2),size,size); // rectangle;
+            ctx.stroke();
 					}
-					
+
 	}
 	label = (node) => {
 		if (this.state.focusedNode){
@@ -78,11 +87,11 @@ click = (node) => {
 			if (this.state.focusedNodeId===id){
 				return "#1DA1F2"
 			} else {
-				let percent = this.state.renderInfo[id].sentiment*100
+				let percent = this.props.renderInfo[id].sentiment*100
 				return this.sentimentToColor(percent,1)
 			}
 		} else {
-			let percent = this.state.renderInfo[id].sentiment*100
+			let percent = this.props.renderInfo[id].sentiment*100
 			return this.sentimentToColor(percent,1)
 		}
 	}
@@ -92,8 +101,8 @@ click = (node) => {
 		return 'rgba('+r+','+g+',0,'+opacity+')';
 	}
 	linkColor = (link) => {
-		if(this.state.renderInfo[link.source.id]){
-			let percent = this.state.renderInfo[link.source.id].sentiment*100
+		if(this.props.renderInfo[link.source.id]){
+			let percent = this.props.renderInfo[link.source.id].sentiment*100
 			return this.sentimentToColor(percent,0.5)
 		} else {
 			return "transparent"
@@ -115,92 +124,17 @@ click = (node) => {
 	}
 }
 handleLinkHover = (node,prevNode) => {
-		
-}
-
-makeMyDataNodes (tweetObject,tweetReplies) {
-	console.log("tweetObject: ",tweetObject)
-	console.log("tweetReplies: ",tweetReplies)
-	if(tweetObject && tweetReplies) {
-		const convertReplyToNode = (reply) => {
-			return {
-				id: reply.id_str,
-				name: reply.name,
-				val: 5,
-				description: reply.text,
-			}
-		}
-		const convertReplyToRenderInfo = (map, reply) => {
-					map[reply.id_str] =
-					{
-						image:reply.profile_image_url,
-						num_retweets:reply.favorite_count,
-						sentiment:reply.sentiment
-					}
-					return map;
-			}
-		const convertReplyToLink = (reply) => {
-			return {
-				source: reply.id_str,
-				target: tweetObject.id_str
-			}
-		}
-		const convertReplyToSeperationLink = (reply) => {
-			var sentimentString
-			if(reply.sentiment < 0.42){
-					sentimentString = "lowSentiment"
-			} else if (reply.sentiment >= 0.42 && reply.sentiment < 0.58){
-					sentimentString = "medSentiment"
-			} else {
-					sentimentString = "highSentiment"
-			}
-			return {
-				source: sentimentString,
-				target: reply.id_str
-			}
-		}
-		let replyNodes = tweetReplies.map(convertReplyToNode)
-		replyNodes = replyNodes.concat([{
-			id: tweetObject.id_str,
-			name: tweetObject.name,
-			val: 13, //Math.sqrt(tweetObject.favorite_count),
-			description: tweetObject.full_text,
-		},
-		{
-				id:"highSentiment"
-		},
-		{
-				id:"medSentiment"
-		},
-		{
-				id:"lowSentiment"
-		}])
-		let replyLinks = tweetReplies.map(convertReplyToLink)
-		let seperationLinks = tweetReplies.map(convertReplyToSeperationLink)
-		let replyRenderInfo = tweetReplies.reduce(convertReplyToRenderInfo,{})
-		replyRenderInfo[tweetObject.id_str] = {
-			image:tweetObject.profile_image_url,
-			num_retweets:tweetObject.favorite_count,
-			sentiment:0.5
-		}
-		this.setState({
-			nodes:replyNodes,
-			links:replyLinks.concat(seperationLinks),
-			renderInfo:replyRenderInfo
-		})
-	} else {
-		return
-	}
 
 }
+
+
 
 render() {
-	console.log({nodes:this.state.nodes,links:this.state.links});
 	return (
 		<div>
 		<ForceGraph2D
 		nodeCanvasObject={this.nodeCanvasObject}
-		graphData={{nodes:this.state.nodes,links:this.state.links}}
+		graphData={this.props.graphData}
 		onNodeHover={this.handleHover}
 		onNodeClick={this.click}
 		nodeLabel={this.label}
@@ -210,7 +144,7 @@ render() {
 		linkWidth	={5}
 		onLinkHover={this.handleLinkHover}
 		dagMode={'radialin'}
-		dagLevelDistance={40}
+		dagLevelDistance={50}
 		/>
 		</div>
 	);
