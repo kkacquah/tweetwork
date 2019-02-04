@@ -27,6 +27,11 @@ class GraphComponent extends Component {
       nodes:[],
       links:[],
       renderInfo:[],
+      sentimentPercentages: {
+    negative_percentage: 0, 
+    neutral_percentage: 0, 
+    positive_percentage: 0
+  },
       graphData:{nodes:[],links:[]}
     }
   }
@@ -35,12 +40,12 @@ class GraphComponent extends Component {
         isLoadingGraph:true
       })
     getTweetReplies(name,idString,numberOfRequests)
-    .then((newTweetReplies)=> {
+    .then((response)=> {
       var focusedTweetId = this.state.focusedTweet
-      this.makeMyDataNodes(this.state.tweetObjects[focusedTweetId],newTweetReplies)
+      this.makeMyDataNodes(this.state.tweetObjects[focusedTweetId],response.replies,response.percentages)
     })
   }
-  makeMyDataNodes (tweetObject,tweetReplies) {
+  makeMyDataNodes (tweetObject,tweetReplies,sentimentPercentages) {
   	console.log("tweetObject: ",tweetObject)
   	console.log("tweetReplies: ",tweetReplies)
   	if(tweetObject && tweetReplies) {
@@ -111,7 +116,8 @@ class GraphComponent extends Component {
   			     links:replyLinks.concat(seperationLinks)
         },
   			renderInfo:replyRenderInfo,
-        isLoadingGraph:false
+        isLoadingGraph:false,
+        sentimentPercentages:sentimentPercentages
   		})
   	} else {
   		return
@@ -189,6 +195,7 @@ class GraphComponent extends Component {
       <Playground
       renderInfo={this.state.renderInfo}//mapping of nodeIds to image urls
 			graphData={this.state.graphData}
+      sentimentPercentages={this.state.sentimentPercentages}
       tweetObject={this.state.tweetObjects[this.state.focusedTweet]}/>
       <TwitterWindow
       scrollRef = {this.myRef}

@@ -44,12 +44,19 @@ click = (node) => {
 
 	}}
 	drawPercentage = (id, x, y, ctx,percentage) => {
-			const label = `${percentage.toFixed(0)}%`;
+			const label = `${this.props.sentimentPercentages[id].toFixed(0)}%`;
             ctx.font = `12px Sans-Serif`;
             const textWidth = ctx.measureText(label).width;
             const bckgDimensions = [textWidth, 12].map(n => n + 12 * 0.2); // some padding
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-            ctx.fillRect(node.x - bckgDimensions[0] / 2, node.y - bckgDimensions[1] / 2, ...bckgDimensions);
+            var textColor
+            if(id == "lowSentiment"){
+            		textColor=this.sentimentToColor(16.6,0.5)
+            }else if(id == "medSentiment") {
+            		textColor =this.sentimentToColor(50,0.5)
+            }else if(id == "highSentiment"){
+            		textColor =this.sentimentToColor(83.3,0.5)
+            }
+            ctx.fillStyle = textColor
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText(label,x,y);
@@ -125,7 +132,7 @@ showLabel (id, x, y, radius, ctx, description){
 			let percent = this.props.renderInfo[link.source.id].sentiment*100
 			return this.sentimentToColor(percent,0.5)
 		} else {
-			return "#000000"
+			return "transparent"
 		}
 	}
 
