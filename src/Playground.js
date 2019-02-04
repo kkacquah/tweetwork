@@ -45,32 +45,35 @@ click = (node) => {
 	}}
 	drawPercentage = (id, x, y, ctx,percentage) => {
 			const label = `${this.props.sentimentPercentages[id].toFixed(0)}%`;
-            ctx.font = `12px Sans-Serif`;
+            ctx.font = `bold 16pt helvetica`;
             const textWidth = ctx.measureText(label).width;
-            const bckgDimensions = [textWidth, 12].map(n => n + 12 * 0.2); // some padding
+            const bckgDimensions = [textWidth, 16].map(n => n + 16 * 0.2); // some padding
             var textColor
             if(id == "lowSentiment"){
-            		textColor=this.sentimentToColor(16.6,0.5)
+            		textColor=this.makeStrokeGradient(ctx,0,25,50)
             }else if(id == "medSentiment") {
-            		textColor =this.sentimentToColor(50,0.5)
+            		textColor =this.makeStrokeGradient(ctx,25,50,75)
             }else if(id == "highSentiment"){
-            		textColor =this.sentimentToColor(83.3,0.5)
+            		textColor =this.makeStrokeGradient(ctx,50,75,100)
             }
             ctx.fillStyle = textColor
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText(label,x,y);
 	}
+  makeStrokeGradient = (ctx,color1,color2,color3) => {
+    var gradient = ctx.createLinearGradient(-100, -100, 100, 100);
+    gradient.addColorStop("0", this.sentimentToColor(color1,1));
+    gradient.addColorStop("0.5" ,this.sentimentToColor(color2,1));
+    gradient.addColorStop("1.0", this.sentimentToColor(color3,1));
+    return gradient
+  }
 	nodeCanvasObject = (node, ctx) => {
-					if (id == "lowSentiment" || id == "medSentiment" || id == "highSentiment"){
-						this.drawPercentage(id, x, y, ctx,30)
+					if (node.id == "lowSentiment" || node.id == "medSentiment" || node.id == "highSentiment"){
+						this.drawPercentage(node.id, node.x, node.y, ctx,30)
 					} else {
             if (node.id == this.props.tweetObject.id_str){
-              var gradient = ctx.createLinearGradient(-100, -100, 100, 100);
-              gradient.addColorStop("0", this.sentimentToColor(0,1));
-              gradient.addColorStop("0.5" ,this.sentimentToColor(50,1));
-              gradient.addColorStop("1.0", this.sentimentToColor(100,1));
-              ctx.strokeStyle=gradient
+              ctx.strokeStyle=this.makeStrokeGradient(ctx,0,50,100)
             } else {
               ctx.strokeStyle=this.nodeColor(node.id)
             }

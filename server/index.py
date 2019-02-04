@@ -20,6 +20,7 @@ def getTweetReplySentiment():
 	tweetRepliesCompact = [compact_tweet_object(tweet) for tweet in tweetReplies]
 	sentimentPercentages = get_tweet_sentiment_percentages(tweetRepliesCompact)
 	response = {'replies':tweetRepliesCompact,'percentages':sentimentPercentages}
+	print(response)
 	return jsonify(response)
 if __name__ == "__main__":
 	app.run(debug=True)

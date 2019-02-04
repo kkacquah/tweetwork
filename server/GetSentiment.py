@@ -4,7 +4,7 @@ import re
 import requests
 from textblob import TextBlob
 
-def clean_tweet_text(tweetText): 
+def clean_tweet_text(tweetText):
 	return ' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t]) \
 									|(\w+:\/\/\S+)", " ", tweetText).split())
 def get_sentiment_of_tweet(tweet):
@@ -27,10 +27,15 @@ def get_tweet_text(tweet):
 	else:
 		return tweet['full_text']
 def get_tweet_sentiment_percentages(tweetReplies):
+	print()
 	total = len(tweetReplies)
 	negCount = sum([1 for tweet in tweetReplies if tweet['sentiment']<0.42])
 	posCount = sum([1 for tweet in tweetReplies if tweet['sentiment']>0.58])
 	neutralCount = total - posCount - negCount
-	return {'highSentiment':(posCount/total)*100,
-			'medSentiment':(neutralCount/total)*100,
-			'lowSentiment':(negCount/total)*100}
+	print(negCount)
+	print(posCount)
+	print(neutralCount)
+	print(total)
+	return {'highSentiment':(float(posCount)/total)*100,
+			'medSentiment':(float(neutralCount)/total)*100,
+			'lowSentiment':(float(negCount)/total)*100}
