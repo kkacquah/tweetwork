@@ -44,12 +44,21 @@ click = (node) => {
 	if (node){
 
 	}}
+	drawPercentage = (id, x, y, ctx,percentage) => {
+			const label = percentage.toFixed(0);
+            ctx.font = `12px Sans-Serif`;
+            const textWidth = ctx.measureText(label).width;
+            const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2); // some padding
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.fillRect(node.x - bckgDimensions[0] / 2, node.y - bckgDimensions[1] / 2, ...bckgDimensions);
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            //ctx.fillStyle = node.color;
+            ctx.fillText(label,x,y);
+	}
 	nodeCanvasObject = ({ id, x, y }, ctx) => {
 					if (id == "lowSentiment" || id == "medSentiment" || id == "highSentiment"){
-						ctx.fillStyle="#000000"
-						ctx.beginPath();
-						ctx.arc(x, y, 10, 0, 2 * Math.PI, false)
-						ctx.fill()
+						this.drawPercentage(id, x, y, ctx,30)
 					} else {
 						var likes = this.state.renderInfo[id].num_retweets
 						var size = likes == 0 ? 3.16 : Math.sqrt(Math.sqrt(likes*1000));
@@ -96,7 +105,7 @@ click = (node) => {
 			let percent = this.state.renderInfo[link.source.id].sentiment*100
 			return this.sentimentToColor(percent,0.5)
 		} else {
-			return "transparent"
+			return "#000000"
 		}
 	}
 
@@ -177,6 +186,20 @@ makeMyDataNodes (tweetObject,tweetReplies) {
 		}])
 		let replyLinks = tweetReplies.map(convertReplyToLink)
 		let seperationLinks = tweetReplies.map(convertReplyToSeperationLink)
+		let totalLinks = replyLinks.concat(seperationLinks,[
+			{
+				source: "lowSentiment",
+				target: tweetObject.id_str
+			},
+			{
+				source: "medSentiment",
+				target: tweetObject.id_str
+			},
+			{
+				source: "highSentiment",
+				target: tweetObject.id_str
+			}
+			])
 		let replyRenderInfo = tweetReplies.reduce(convertReplyToRenderInfo,{})
 		replyRenderInfo[tweetObject.id_str] = {
 			image:tweetObject.profile_image_url,
@@ -185,7 +208,7 @@ makeMyDataNodes (tweetObject,tweetReplies) {
 		}
 		this.setState({
 			nodes:replyNodes,
-			links:replyLinks.concat(seperationLinks),
+			links:totalLinks,
 			renderInfo:replyRenderInfo
 		})
 	} else {
@@ -210,7 +233,7 @@ render() {
 		linkWidth	={5}
 		onLinkHover={this.handleLinkHover}
 		dagMode={'radialin'}
-		dagLevelDistance={40}
+		dagLevelDistance={50}
 		/>
 		</div>
 	);
