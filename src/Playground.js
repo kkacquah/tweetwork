@@ -47,14 +47,14 @@ click = (node) => {
 			const label = `${percentage.toFixed(0)}%`;
             ctx.font = `12px Sans-Serif`;
             const textWidth = ctx.measureText(label).width;
-            const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2); // some padding
+            const bckgDimensions = [textWidth, 12].map(n => n + 12 * 0.2); // some padding
             ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
             ctx.fillRect(node.x - bckgDimensions[0] / 2, node.y - bckgDimensions[1] / 2, ...bckgDimensions);
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText(label,x,y);
 	}
-	nodeCanvasObject = ({ id, x, y }, ctx) => {
+	nodeCanvasObject = (node, ctx) => {
 					if (id == "lowSentiment" || id == "medSentiment" || id == "highSentiment"){
 						this.drawPercentage(id, x, y, ctx,30)
 					} else {
@@ -80,6 +80,7 @@ click = (node) => {
             this.showLabel (node.id, node.x, node.y, radius, ctx, node.description);
 					}
 }
+//makes text boxes (empty), and adds the unformatted tweets)
 showLabel (id, x, y, radius, ctx, description){
   if (this.state.focusedNodeId){
     if (this.state.focusedNodeId===id){
