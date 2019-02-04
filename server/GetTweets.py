@@ -26,7 +26,9 @@ def get_tweet_replies(screenName,tweetId,maxId=None):
 	r = requests.get(baseUrl + 'search/tweets.json',
 		params=params,
 		headers= bearerAuthorizationHeader)
+
 	response = r.json()['statuses']
+	print(response)
 	if(response[1]['id_str'] == maxId):
 		return []
 	else:

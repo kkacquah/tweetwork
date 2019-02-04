@@ -26,3 +26,11 @@ def get_tweet_text(tweet):
 		return tweet['retweeted_status']['full_text']
 	else:
 		return tweet['full_text']
+def get_tweet_sentiment_percentages(tweetReplies):
+	total = len(tweetReplies)
+	negCount = sum([1 for tweet in tweetReplies if tweet['sentiment']<0.42])
+	posCount = sum([1 for tweet in tweetReplies if tweet['sentiment']>0.58])
+	neutralCount = total - posCount - negCount
+	return {'highSentiment':(posCount/total)*100,
+			'medSentiment':(neutralCount/total)*100,
+			'lowSentiment':(negCount/total)*100}
