@@ -18,8 +18,8 @@ def getTweetReplySentiment():
 	tries = int(request.args.get('tries'))
 	tweetReplies = collect_tweet_replies(user,tweetId,tries)
 	tweetRepliesCompact = [compact_tweet_object(tweet) for tweet in tweetReplies]
-	print("tweetReplies: "+str(tweetRepliesCompact))
-	tweetRepliesCompact.sort(key=lambda i: i['sentiment'])
-	return jsonify(tweetRepliesCompact)
+	sentimentPercentages = get_tweet_sentiment_percentages(tweetRepliesCompact)
+	response = {'replies':tweetRepliesCompact,'percentages':sentimentPercentages}
+	return jsonify(response)
 if __name__ == "__main__":
 	app.run(debug=True)

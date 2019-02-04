@@ -43,12 +43,20 @@ click = (node) => {
 	if (node){
 
 	}}
-	nodeCanvasObject = (node, ctx) => {
-  		if (node.id == "lowSentiment" || node.id == "medSentiment" || node.id == "highSentiment"){
-						ctx.fillStyle="#000000"
-						ctx.beginPath();
-						ctx.arc(node.x, node.y, 10, 0, 2 * Math.PI, false)
-						ctx.fill()
+	drawPercentage = (id, x, y, ctx,percentage) => {
+			const label = `${percentage.toFixed(0)}%`;
+            ctx.font = `12px Sans-Serif`;
+            const textWidth = ctx.measureText(label).width;
+            const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2); // some padding
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.fillRect(node.x - bckgDimensions[0] / 2, node.y - bckgDimensions[1] / 2, ...bckgDimensions);
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(label,x,y);
+	}
+	nodeCanvasObject = ({ id, x, y }, ctx) => {
+					if (id == "lowSentiment" || id == "medSentiment" || id == "highSentiment"){
+						this.drawPercentage(id, x, y, ctx,30)
 					} else {
             if (node.id == this.props.tweetObject.id_str){
               var gradient = ctx.createLinearGradient(-100, -100, 100, 100);
@@ -116,7 +124,7 @@ showLabel (id, x, y, radius, ctx, description){
 			let percent = this.props.renderInfo[link.source.id].sentiment*100
 			return this.sentimentToColor(percent,0.5)
 		} else {
-			return "transparent"
+			return "#000000"
 		}
 	}
 
@@ -137,7 +145,6 @@ showLabel (id, x, y, radius, ctx, description){
 handleLinkHover = (node,prevNode) => {
 
 }
-
 
 
 render() {
