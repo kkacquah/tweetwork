@@ -65,30 +65,41 @@ click = (node) => {
 					if (id == "lowSentiment" || id == "medSentiment" || id == "highSentiment"){
 						this.drawPercentage(id, x, y, ctx,30)
 					} else {
-            if (id == this.props.tweetObject.id_str){
-              console.log("Here")
-              console.log(id)
+            if (node.id == this.props.tweetObject.id_str){
               var gradient = ctx.createLinearGradient(-100, -100, 100, 100);
               gradient.addColorStop("0", this.sentimentToColor(0,1));
               gradient.addColorStop("0.5" ,this.sentimentToColor(50,1));
               gradient.addColorStop("1.0", this.sentimentToColor(100,1));
               ctx.strokeStyle=gradient
             } else {
-              ctx.strokeStyle=this.nodeColor(id)
+              ctx.strokeStyle=this.nodeColor(node.id)
             }
-            var likes = this.props.renderInfo[id].num_retweets
+            var likes = this.props.renderInfo[node.id].num_retweets
             var size = likes == 0 ? 3.16 : Math.sqrt(Math.sqrt(likes*1000));
             var radius = size*(3/5)
             ctx.beginPath();
-            ctx.arc(x, y, radius, 0, 2 * Math.PI, false)
+            ctx.arc(node.x, node.y, radius, 0, 2 * Math.PI, false)
             var img = new Image();
-            img.src = this.props.renderInfo[id].image
+            img.src = this.props.renderInfo[node.id].image
             ctx.lineWidth = radius/2;
-            ctx.drawImage(img, x-(size/2), y-(size/2),size,size); // rectangle;
-            ctx.stroke();
+            ctx.drawImage(img, node.x-(size/2), node.y-(size/2),size,size); // rectangle;
+            ctx.stroke()
+            this.showLabel (node.id, node.x, node.y, radius, ctx, node.description);
 					}
+}
+showLabel (id, x, y, radius, ctx, description){
+  if (this.state.focusedNodeId){
+    if (this.state.focusedNodeId===id){
+      ctx.font = "3pt helvetica";
+      ctx.fillText(description, x-4*radius,y+2*radius)
+      ctx.rect(x-4*radius,y+2*radius,8*radius,+radius)
+    }
+  }
+}
 
-	}
+//wrapping text information needs to be done here!
+
+
 	label = (node) => {
 		if (this.state.focusedNode){
 			if (this.state.focusedNode===node.id){
@@ -144,7 +155,8 @@ handleLinkHover = (node,prevNode) => {
 
 
 render() {
-	return (
+console.log(this.props.graphData)
+  return (
 		<div>
 		<ForceGraph2D
 		nodeCanvasObject={this.nodeCanvasObject}
