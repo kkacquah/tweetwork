@@ -59,8 +59,9 @@ export function sentimentToColor (percent,opacity) {
 }
 var loadImage = function (node, ctx,size) {
   var img = new Image();
-	img.src = node.image
-  ctx.drawImage(img, node.x-(size/2), node.y-(size/2),size,size);
+	img.src = node.image;
+	ctx.drawImage(img, node.x-(size/2), node.y-(size/2),size,size);
+
 }
 
 export function drawNode (node,ctx,focusedId,centerTweetIdStr) {
@@ -72,7 +73,7 @@ export function drawNode (node,ctx,focusedId,centerTweetIdStr) {
 		} else {
 			ctx.strokeStyle=nodeColor(node,focusedId)
 		}
-		var size = node.favorite_count == 0 ? 3.16 : Math.sqrt(Math.sqrt(node.favorite_count*1000));
+		var size = node.favorite_count == 0 ? 3.16 : getRadiusFromFavoriteCount(node.favorite_count);
 		var radius = size*(3/5)
 		ctx.beginPath();
 		ctx.arc(node.x, node.y, radius, 0, 2 * Math.PI, false)

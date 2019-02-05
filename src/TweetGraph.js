@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ForceGraph2D} from 'react-force-graph';
-import { drawNode,sentimentToColor} from './helpers/canvasUtils';
+import { drawNode,sentimentToColor,getRadiusFromFavoriteCount} from './helpers/canvasUtils';
 const nodes = {
 		"nodes": [
 				{
@@ -21,6 +21,8 @@ const nodes = {
 				}
 		]
 }
+
+
 class TweetGraph extends Component
 		{
 	constructor(props) {
@@ -32,7 +34,13 @@ class TweetGraph extends Component
 	nodeCanvasObject = (node, ctx) => {
 		drawNode(node,ctx,this.state.focusedNodeId,this.props.tweetObject.id_str)
   }
-
+	getStyle (display){
+		if (display){
+			return {}
+		} else {
+			return {display:'none'}
+		}
+	}
 	linkColor = (link) => {
 		if(link.source.sentiment){
 			let percent = link.source.sentiment*100
@@ -67,10 +75,16 @@ handleClick = node => {
           );
         };
 
-
+componentDidMount(){
+	this.fg.zoom(0.99, 10)
+}
 render() {
+	var radius = 0
+	if(this.props.tweetObject){
+		radius = getRadiusFromFavoriteCount(this.props.tweetObject.favorite_count)*(3/5)
+	}
   return (
-		<div>
+		<div style={this.getStyle(this.props.display)}>
 		<ForceGraph2D
 		ref={el => { this.fg = el; }}
 		nodeCanvasObject= {this.nodeCanvasObject}

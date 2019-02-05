@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import TwitterWindow from './TwitterWindow.js'
 import TweetGraph from './TweetGraph.js'
+import GradientLoadingWheel from './GradientLoadingWheel.js'
 import {createTweetDisplayObject} from './helpers/loadTweetObject';
 import {getNodesAndLinks} from './helpers/graphUtils';
 import {getTweetsFromUser,getTweetReplies} from './apis/twitterApiCalls';
@@ -10,7 +11,16 @@ const styles = {
     backgroundColor: '#F5F8FA',
     width:'100%',
     height:'100%',
-    position:'absolute'
+    position: 'relative'
+  },
+  loadingBackground:{
+    backgroundColor: '#F5F8FA',
+    width:'100%',
+    height:'100%',
+    position:'fixed',
+    display:'flex',
+    justifyContent:'center',
+    alignItems:'center'
   }
 }
 class GraphComponent extends Component {
@@ -23,7 +33,7 @@ class GraphComponent extends Component {
       hasMore: true,
       isLoading: false,
       cursor: null,
-      isLoadingGraph:true,
+      isLoadingGraph:false,
       nodes:[],
       links:[],
       renderInfo:[],
@@ -61,6 +71,9 @@ class GraphComponent extends Component {
 
   }
   focus = (id) => {
+    this.setState({
+      focusedTweet: id
+    })
     this.loadTweetReplies(this.state.screenName,this.state.tweetObjects[id].id_str,30,id)//necessary to load graph
   }
   onFocusSearchBar = (id) => {
@@ -124,11 +137,17 @@ class GraphComponent extends Component {
     console.log("this.state.isLoadingGraph: ",this.state.isLoadingGraph)
     return (
       <div style={styles.GraphBackground}>
-      {this.state.isLoadingGraph ?
-       `Loading` :
+      { this.state.isLoadingGraph?
+       <div style={styles.loadingBackground} >
+       <GradientLoadingWheel
+       width={200}
+       height={200}
+       />
+       </div>  :
         null }
 
       <TweetGraph
+      display ={!this.state.isLoadingGraph}
 			graphData={this.state.graphData}
       tweetObject={this.state.tweetObjects[this.state.focusedTweet]}/>
       <TwitterWindow
