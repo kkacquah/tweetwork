@@ -32,7 +32,7 @@ class SearchBar extends Component {
       style:styles.InputStyle,
       focused:false,
       focusedUser:null,
-      users: [{name:'Donald J. Trump', screen_name:'realDonaldTrump'}, {name:'CNN', screen_name:'CNN'},{name:'Kenneth Acquah', screen_name:'aquariusacquah'}]
+      users: [{name:'Donald J. Trump', screen_name:'realDonaldTrump'}, {name:'CNN', screen_name:'CNN'},{name:'Kenneth Acquah', screen_name:'aquariusacquah'},{name: 'Kim Kardashian West', screen_name:'KimKardashian'}]
     }
   }
   onFocus  = () => {

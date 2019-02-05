@@ -83,7 +83,6 @@ export function drawNode (node,ctx,focusedId,centerTweetIdStr) {
 		showLabel (node.id, node.x, node.y, radius, ctx, node.description,focusedId);
 		}
 	}
-}
 
 function getLines(ctx, text, maxWidth) {
     var words = text.split(" ");
