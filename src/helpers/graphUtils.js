@@ -36,7 +36,7 @@ export function getNodesAndLinks (tweetObject,tweetReplies,sentimentPercentages)
   			name: tweetObject.name,
         image: tweetObject.profile_image_url,
   			favorite_count: tweetObject.favorite_count, //Math.sqrt(tweetObject.favorite_count),
-  			description: tweetObject.full_text,
+  			description: tweetObject.text,
   		})
       if (sentimentPercentages.lowSentiment){
         replyNodes = replyNodes.concat([
