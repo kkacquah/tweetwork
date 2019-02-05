@@ -1,15 +1,16 @@
-from urllib.parse import urlparse
+from urllib.parse import parse_qsl
 import oauth2 as oauth
 from config import *
 
 consumer_key = ckey
 consumer_secret = csecret
 
+# TODO: Add OAuth Callback
 request_token_url = 'https://api.twitter.com/oauth/request_token'
 access_token_url = 'https://api.twitter.com/oauth/access_token'
 authorize_url = 'https://api.twitter.com/oauth/authorize'
 
-consumer = oauth.Consumer(consumer_key, consumer_secret)
+consumer = oauth.Consumer(ckey, csecret)
 client = oauth.Client(consumer)
 
 # Step 1: Get a request token. This is a temporary token that is used for
@@ -20,12 +21,10 @@ resp, content = client.request(request_token_url, "GET")
 if resp['status'] != '200':
     raise Exception("Invalid response %s." % resp['status'])
 
-request_token = dict(urlparse(content,"query"))
-
-print("Request Token:")
-print("    - oauth_token        = %s" % request_token['oauth_token'])
-print("    - oauth_token_secret = %s" % request_token['oauth_token_secret'])
-print()
+request_token_encoded = dict(parse_qsl(content))
+request_token = dict()
+for (key,value) in request_token_encoded.items():
+    request_token[key.decode()] = value.decode()
 
 # Step 2: Redirect to the provider. Since this is a CLI script we do not
 # redirect. In a web application you would redirect the user to the URL
@@ -39,8 +38,8 @@ print("")
 # usually define this in the oauth_callback argument as well.
 accepted = 'n'
 while accepted.lower() == 'n':
-    accepted = raw_input('Have you authorized me? (y/n) ')
-oauth_verifier = raw_input('What is the PIN? ')
+    accepted = input('Have you authorized me? (y/n) ')
+oauth_verifier = input('What is the PIN? ')
 
 # Step 3: Once the consumer has redirected the user back to the oauth_callback
 # URL you can request the access token the user has approved. You use the
@@ -53,8 +52,12 @@ token.set_verifier(oauth_verifier)
 client = oauth.Client(consumer, token)
 
 resp, content = client.request(access_token_url, "POST")
-access_token = dict(urlparse.parse_qsl(content))
+access_token_encoded = dict(parse_qsl(content))
 
+access_token = dict()
+for (key,value) in access_token_encoded.items():
+    access_token[key.decode()] = value.decode()
+print(access_token)
 print("Access Token:")
 print("    - oauth_token        = %s" % access_token['oauth_token'])
 print("    - oauth_token_secret = %s" % access_token['oauth_token_secret'])
