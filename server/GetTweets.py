@@ -31,11 +31,14 @@ def get_tweet_replies(screenName,tweetId,maxId=None):
 	except requests.exceptions.HTTPError as err:
 		print(err)
 	response = r.json()['statuses']
-	if(response[1]['id_str'] == maxId):
-		return []
+	if(len(response)>1):
+		if(response[0]['id_str'] == maxId):
+			return []
+		else:
+			slicedResponse = response[1::]
+			return list(filter(lambda tweet: tweet['in_reply_to_status_id_str'] == tweetId, slicedResponse))
 	else:
-		slicedResponse = response[1::]
-		return list(filter(lambda tweet: tweet['in_reply_to_status_id_str'] == tweetId, slicedResponse))
+		return []
 def collect_tweet_replies(screenName,tweetId,tries=10,maxId=None):
 	if tries == 0:
 		return []

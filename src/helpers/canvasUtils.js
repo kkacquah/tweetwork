@@ -1,6 +1,6 @@
 function drawPercentage (node, ctx) {
 	const label = `${node.percentage.toFixed(0)}%`;
-	ctx.font = `bold 16pt helvetica`;
+	ctx.font = `bold 16pt arial`;
 	const textWidth = ctx.measureText(label).width;
 	const bckgDimensions = [textWidth, 16].map(n => n + 16 * 0.2); // some padding
 	var textColor
@@ -24,18 +24,25 @@ function makeStrokeGradient (ctx,color1,color2,color3)  {
 	return gradient
 }
 
-function showLabel (id, x, y, radius, ctx, description, focusedId) {
+function showLabel (node, radius, ctx, focusedId) {
 	if (focusedId){
-		if (focusedId===id){
-			ctx.font = "3pt helvetica";
-			try {}
-			var lines = getLines(ctx, description, 8*radius)
+		if (focusedId===node.id){
+			ctx.font = "3pt arial";
+			var lines = getLines(ctx, node.description, 40)
+			let percent = node.sentiment*100
+			ctx.fillStyle = sentimentToColor(percent,0.6)
+			ctx.strokeStyle = sentimentToColor(percent,1)
+			ctx.rect(node.x-22,node.y+2*radius-6,44,4*lines.length+6);
+			ctx.lineWidth = 1.5;
+			ctx.fill()
+			ctx.stroke()
+			ctx.fillStyle= 'black'
 			lines.forEach((line,i)=>{
-				ctx.fillText(line, x-4*radius,y+(2+i*2)*radius)
+				ctx.fillText(line, node.x-20,node.y+(2*radius)+(4*i))
 			});
-			ctx.rect(x-4*radius,y+2*radius,8*radius,radius)
+
 		}
-	}
+}
 }
 
 function nodeColor (node,focusedNodeId) {
@@ -81,10 +88,9 @@ export function drawNode (node,ctx,focusedId,centerTweetIdStr) {
 
 		loadImage(node,ctx,size)
 		ctx.stroke()
-		showLabel (node.id, node.x, node.y, radius, ctx, node.description,focusedId);
+		showLabel (node, radius, ctx, focusedId);
 		}
 	}
-}
 
 function getLines(ctx, text, maxWidth) {
     var words = text.split(" ");
@@ -103,4 +109,7 @@ function getLines(ctx, text, maxWidth) {
     }
     lines.push(currentLine);
     return lines;
+}
+export function getRadiusFromFavoriteCount(favoriteCount){
+	return Math.sqrt(Math.sqrt(favoriteCount*1000))
 }

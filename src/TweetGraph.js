@@ -97,7 +97,6 @@ render() {
 		linkWidth	={5}
 		dagMode={'radialin'}
 		dagLevelDistance={50}
-		zoom={0.01,10}
 		/>
 		</div>
 	);
