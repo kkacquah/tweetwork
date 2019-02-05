@@ -23,16 +23,21 @@ function makeStrokeGradient (ctx,color1,color2,color3)  {
 	gradient.addColorStop("1.0", sentimentToColor(color3,1));
 	return gradient
 }
-//makes text boxes (empty), and adds the unformatted tweets)
+
 function showLabel (id, x, y, radius, ctx, description, focusedId) {
 	if (focusedId){
 		if (focusedId===id){
 			ctx.font = "3pt helvetica";
-			ctx.fillText(description, x-4*radius,y+2*radius)
-			ctx.rect(x-4*radius,y+2*radius,8*radius,+radius)
+			try {}
+			var lines = getLines(ctx, description, 8*radius)
+			lines.forEach((line,i)=>{
+				ctx.fillText(line, x-4*radius,y+(2+i*2)*radius)
+			});
+			ctx.rect(x-4*radius,y+2*radius,8*radius,radius)
 		}
 	}
 }
+
 function nodeColor (node,focusedNodeId) {
 	if (focusedNodeId){
 		if (focusedNodeId===node.id){
@@ -57,6 +62,7 @@ var loadImage = function (node, ctx,size) {
 	img.src = node.image
   ctx.drawImage(img, node.x-(size/2), node.y-(size/2),size,size);
 }
+
 export function drawNode (node,ctx,focusedId,centerTweetIdStr) {
 	if (node.id == "lowSentiment" || node.id == "medSentiment" || node.id == "highSentiment"){
 		drawPercentage(node, ctx)
@@ -75,5 +81,25 @@ export function drawNode (node,ctx,focusedId,centerTweetIdStr) {
 		loadImage(node,ctx,size)
 		ctx.stroke()
 		showLabel (node.id, node.x, node.y, radius, ctx, node.description,focusedId);
+		}
 	}
+}
+
+function getLines(ctx, text, maxWidth) {
+    var words = text.split(" ");
+    var lines = [];
+    var currentLine = words[0];
+
+    for (var i = 1; i < words.length; i++) {
+        var word = words[i];
+        var width = ctx.measureText(currentLine + " " + word).width;
+        if (width < maxWidth) {
+            currentLine += " " + word;
+        } else {
+            lines.push(currentLine);
+            currentLine = word;
+        }
+    }
+    lines.push(currentLine);
+    return lines;
 }

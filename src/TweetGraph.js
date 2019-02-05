@@ -56,12 +56,23 @@ class TweetGraph extends Component
 		}
 	}
 }
+handleClick = node => {
+          // Aim at node from outside it
+          const distance = 40;
+          const distRatio = 1 + distance/Math.hypot(node.x, node.y, node.z);
+          this.fg.cameraPosition(
+            { x: node.x * distRatio, y: node.y * distRatio, z: node.z * distRatio }, // new position
+            node, // lookAt ({ x, y, z })
+            3000  // ms transition duration
+          );
+        };
 
 
 render() {
   return (
 		<div>
 		<ForceGraph2D
+		ref={el => { this.fg = el; }}
 		nodeCanvasObject= {this.nodeCanvasObject}
 		graphData={this.props.graphData}
 		onNodeHover={this.handleHover}
@@ -72,6 +83,7 @@ render() {
 		linkWidth	={5}
 		dagMode={'radialin'}
 		dagLevelDistance={50}
+		zoom={0.01,10}
 		/>
 		</div>
 	);
