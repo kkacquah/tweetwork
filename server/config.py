@@ -1,6 +1,6 @@
 #consumer key, consumer secret, access token, access secret.
-ckey="224YbavpCHSFEQEa1ipi8YTon"
-csecret="VmqceV6WDKRhuaeem6FmD8rvq5uc97ZOdVoI5bMyjAe8bFupga "
+ckey='64Soz20JA3s9Htk2Xue5CR3M8'
+csecret='lYCpw9eU93rnhTeM83BY5DSHb7AZuEGFb3caCPAJTr3bjeQP2a'
 atoken="739935257558974464-GqVAd4eaJCpOPCfqqysugQUWL2fXGsH"
 asecret="5ELNwyvWGFIcVCTuAHjrzmfxMrGx3JrEsB2rSx4dbN1b7"
 bearerAuthorizationHeader = {

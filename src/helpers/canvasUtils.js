@@ -27,7 +27,7 @@ function makeStrokeGradient (ctx,color1,color2,color3)  {
 function showLabel (id, x, y, radius, ctx, description, focusedId) {
 	if (focusedId){
 		if (focusedId===id){
-			ctx.font = "3pt helvetica";
+			ctx.font = "3pt helvetica")
 			var lines = getLines(ctx, description, 8*radius)
 			lines.forEach((line,i)=>{
 				ctx.fillText(line, x-4*radius,y+(2+i*2)*radius)
@@ -83,6 +83,7 @@ export function drawNode (node,ctx,focusedId,centerTweetIdStr) {
 		showLabel (node.id, node.x, node.y, radius, ctx, node.description,focusedId);
 		}
 	}
+}
 
 function getLines(ctx, text, maxWidth) {
     var words = text.split(" ");
