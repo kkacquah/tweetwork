@@ -74,7 +74,7 @@ class GraphComponent extends Component {
     this.setState({
       focusedTweet: id
     })
-    this.loadTweetReplies(this.state.screenName,this.state.tweetObjects[id].id_str,30,id)//necessary to load graph
+    this.loadTweetReplies(this.state.screenName,this.state.tweetObjects[id].id_str,40,id)//necessary to load graph
   }
   onFocusSearchBar = (id) => {
     this.setState({

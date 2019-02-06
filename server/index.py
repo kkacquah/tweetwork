@@ -1,6 +1,5 @@
 from GetTweets import *
 from utils import *
-from Authenticate import *
 from flask import Flask
 from flask import request
 from flask import jsonify
@@ -25,11 +24,11 @@ def getTweetReplySentiment():
 	sentimentPercentages = get_tweet_sentiment_percentages(tweetRepliesCompact)
 	response = {'replies':tweetRepliesCompact,'percentages':sentimentPercentages}
 	return jsonify(response)
-@app.route("/auth/request_token")
-def requestOAuthToken():
-	return ""
-@app.route("/auth/login")
-def login():
-	return ""
+# @app.route("/auth/request_token")
+# def requestOAuthToken():
+# 	return ""
+# @app.route("/auth/login")
+# def login():
+# 	return ""
 if __name__ == "__main__":
 	app.run(debug=True)
