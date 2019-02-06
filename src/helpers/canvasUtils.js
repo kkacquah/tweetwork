@@ -1,6 +1,6 @@
 function drawPercentage (node, ctx) {
 	const label = `${node.percentage.toFixed(0)}%`;
-	ctx.font = `bold 16pt helvetica`;
+	ctx.font = `bold 16pt arial`;
 	const textWidth = ctx.measureText(label).width;
 	const bckgDimensions = [textWidth, 16].map(n => n + 16 * 0.2); // some padding
 	var textColor
@@ -23,15 +23,26 @@ function makeStrokeGradient (ctx,color1,color2,color3)  {
 	gradient.addColorStop("1.0", sentimentToColor(color3,1));
 	return gradient
 }
-//makes text boxes (empty), and adds the unformatted tweets)
-function showLabel (id, x, y, radius, ctx, description, focusedId) {
+
+function showLabel (node, size, ctx, focusedId) {
 	if (focusedId){
-		if (focusedId===id){
-			ctx.font = "3pt helvetica";
-			ctx.fillText(description, x-4*radius,y+2*radius)
-			ctx.rect(x-4*radius,y+2*radius,8*radius,+radius)
+		if (focusedId===node.id){
+
+			ctx.font = "3pt arial";
+			var lines = getLines(ctx, node.description, 40)
+			let percent = node.sentiment*100
+			ctx.fillStyle = sentimentToColor(percent,0.6)
+			ctx.strokeStyle = sentimentToColor(percent,1)
+			ctx.lineWidth = 1.5;
+			ctx.fillRect(node.x-22,node.y+(2*size)-4,44,4*lines.length+6);
+			ctx.strokeRect(node.x-22,node.y+(2*size)-4,44,4*lines.length+6);
+			ctx.fillStyle= 'black'
+			lines.forEach((line,i)=>{
+				ctx.fillText(line, node.x-20,node.y+(2*size)+(4*i))
+			});
+
 		}
-	}
+}
 }
 function nodeColor (node,focusedNodeId) {
 	if (focusedNodeId){
@@ -62,21 +73,27 @@ export function drawNode (node,ctx,focusedId,centerTweetIdStr) {
 	if (node.id == "lowSentiment" || node.id == "medSentiment" || node.id == "highSentiment"){
 		drawPercentage(node, ctx)
 	} else {
+
+		var size = node.favorite_count == 0 ? 3.16 : getRadiusFromFavoriteCount(node.favorite_count);
+		var radius = size*(3/5)
+		ctx.beginPath();
+		ctx.arc(node.x, node.y, radius, 0, 2 * Math.PI, false)
+
+
+		loadImage(node,ctx,size)
+		showLabel (node, size, ctx, focusedId);
 		if (node.id == centerTweetIdStr){
 			ctx.strokeStyle=makeStrokeGradient(ctx,0,50,100)
 		} else {
 			ctx.strokeStyle=nodeColor(node,focusedId)
 		}
-		var size = node.favorite_count == 0 ? 3.16 : getRadiusFromFavoriteCount(node.favorite_count);
-		var radius = size*(3/5)
-		ctx.beginPath();
-		ctx.arc(node.x, node.y, radius, 0, 2 * Math.PI, false)
 		ctx.lineWidth = radius/2;
-
-		loadImage(node,ctx,size)
 		ctx.stroke()
 		showLabel (node.id, node.x, node.y, radius, ctx, node.description,focusedId);
 	}
+}
+export function getRadiusFromFavoriteCount(favoriteCount){
+	return Math.sqrt(Math.sqrt(favoriteCount*1000))
 }
 export function getRadiusFromFavoriteCount(favoriteCount){
 	return Math.sqrt(Math.sqrt(favoriteCount*1000))
