@@ -80,7 +80,7 @@ export function drawNode (node,ctx,focusedId,centerTweetIdStr) {
 		var radius = size*(3/5)
 		ctx.beginPath();
 		ctx.arc(node.x, node.y, radius, 0, 2 * Math.PI, false)
-		ctx.lineWidth = radius/2;
+
 
 		loadImage(node,ctx,size)
 		showLabel (node, size, ctx, focusedId);
@@ -89,6 +89,7 @@ export function drawNode (node,ctx,focusedId,centerTweetIdStr) {
 		} else {
 			ctx.strokeStyle=nodeColor(node,focusedId)
 		}
+		ctx.lineWidth = radius/2;
 		ctx.stroke()
 		}
 	}
