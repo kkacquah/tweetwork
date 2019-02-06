@@ -11,10 +11,9 @@ const styles = {
     borderRadius: 5,
   },
   window:{
-    height: '90%',
+    height: '100%',
     justifyContent:'center',
     backgroundColor:'white',
-    marginLeft: '20px',
     borderRadius: 5,
     top:"2%",
     position: 'fixed',
