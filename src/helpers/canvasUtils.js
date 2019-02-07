@@ -36,7 +36,7 @@ function showLabel (node, size, ctx, focusedId) {
 			ctx.lineWidth = 1.5;
 			ctx.fillRect(node.x-22,node.y+(2*size)-4,44,4*lines.length+6);
 			ctx.strokeRect(node.x-22,node.y+(2*size)-4,44,4*lines.length+6);
-			ctx.fillStyle= 'black'
+			ctx.fillStyle= "rgba(0,0,0,0.7)"
 			lines.forEach((line,i)=>{
 				ctx.fillText(line, node.x-20,node.y+(2*size)+(4*i))
 			});
@@ -83,7 +83,9 @@ export function drawNode (node,ctx,focusedId,centerTweetIdStr) {
 
 
 		loadImage(node,ctx,size)
-		showLabel (node, size, ctx, focusedId);
+		if(node.id != centerTweetIdStr){
+			showLabel (node, size, ctx, focusedId);
+		}
 		if (node.id == centerTweetIdStr){
 			ctx.strokeStyle=makeStrokeGradient(ctx,0,50,100)
 		} else {

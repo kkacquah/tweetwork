@@ -38,7 +38,7 @@ export function getNodesAndLinks (tweetObject,tweetReplies,sentimentPercentages)
   			favorite_count: tweetObject.favorite_count, //Math.sqrt(tweetObject.favorite_count),
   			description: tweetObject.text,
   		})
-      if (sentimentPercentages.lowSentiment){
+      if (sentimentPercentages.lowSentiment || sentimentPercentages.medSentiment || sentimentPercentages.highSentiment){
         replyNodes = replyNodes.concat([
     		{
     				id:"lowSentiment",

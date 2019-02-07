@@ -60,7 +60,7 @@ class SearchBar extends Component {
         onFocus={ this.onFocus }
         onChange={this.handleChange} />
         </div>
-        {this.props.focusedTweet == null && this.state.focused ?
+        {this.state.focused ?
         <div class="speech-bubble">
         <div class="arrow-top"></div>
         {this.state.users.map(

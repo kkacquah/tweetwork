@@ -32,7 +32,9 @@ class TweetGraph extends Component
 		}
 	}
 	nodeCanvasObject = (node, ctx) => {
-		drawNode(node,ctx,this.state.focusedNodeId,this.props.tweetObject.id_str)
+		if(this.props.tweetObject.id_str){
+			drawNode(node,ctx,this.state.focusedNodeId,this.props.tweetObject.id_str)
+		}
   }
 	getStyle (display){
 		if (display){
@@ -96,7 +98,7 @@ render() {
 		linkColor	={this.linkColor}
 		linkWidth	={5}
 		dagMode={'radialin'}
-		dagLevelDistance={50}
+		dagLevelDistance={radius+50}
 		/>
 		</div>
 	);

@@ -45,7 +45,7 @@ class GraphComponent extends Component {
       graphData:{nodes:[],links:[]}
     }
   }
-  loadTweetReplies(name,idString,numberOfRequests=10,focusedId){
+  loadTweetReplies(name,idString,numberOfRequests=40,focusedId){
      this.setState({
         isLoadingGraph:true
       })
@@ -59,6 +59,7 @@ class GraphComponent extends Component {
     })
   }
   makeMyDataNodes (tweetObject,tweetReplies,sentimentPercentages) {
+    console.log(sentimentPercentages)
   	if(tweetObject && tweetReplies) {
   		let graphData = getNodesAndLinks(tweetObject,tweetReplies,sentimentPercentages)
   		this.setState({
@@ -74,7 +75,7 @@ class GraphComponent extends Component {
     this.setState({
       focusedTweet: id
     })
-    this.loadTweetReplies(this.state.screenName,this.state.tweetObjects[id].id_str,40,id)//necessary to load graph
+    this.loadTweetReplies(this.state.screenName,this.state.tweetObjects[id].id_str,10,id)//necessary to load graph
   }
   onFocusSearchBar = (id) => {
     this.setState({
@@ -83,6 +84,9 @@ class GraphComponent extends Component {
   }
   onSelectSearchBar = (value) => {
     this.getTweetObjects(value)
+    this.setState({
+      focusedTweet: null
+    })
   }
   handleScroll = (e) => {
     const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
@@ -145,11 +149,12 @@ class GraphComponent extends Component {
        />
        </div>  :
         null }
-
+      {this.state.focusedTweet != null?
       <TweetGraph
       display ={!this.state.isLoadingGraph}
 			graphData={this.state.graphData}
       tweetObject={this.state.tweetObjects[this.state.focusedTweet]}/>
+      : null}
       <TwitterWindow
       scrollRef = {this.myRef}
       tweetObjects={this.state.tweetObjects}
