@@ -5,10 +5,10 @@ import GradientLoadingWheel from './GradientLoadingWheel.js'
 import {createTweetDisplayObject} from './helpers/loadTweetObject';
 import {getNodesAndLinks} from './helpers/graphUtils';
 import {getTweetsFromUser,getTweetReplies} from './apis/twitterApiCalls';
-
+import { FaChevronCircleLeft } from 'react-icons/fa';
 const styles = {
   GraphBackground:{
-    backgroundColor: '#F5F8FA',
+    backgroundColor: '#F5F5F5',
     width:'100%',
     height:'100%',
     position: 'relative'
@@ -21,6 +21,24 @@ const styles = {
     display:'flex',
     justifyContent:'center',
     alignItems:'center'
+  },
+  Slider:{
+    backgroundColor: '#F5F8FA',
+    top:'50%',
+    marginTop:'-24px',
+    display:'flex',
+    flexDirection:'column',
+    justifyContent:'center',
+    left:'250px',
+    width:'24px',
+    height:'48px',
+    borderWidth:0.5,
+    borderRight:'1px solid #657786',
+    borderTop:'1px solid #657786',
+    borderBottom:' 1px solid #657786',
+    borderBottomRightRadius:'50%',
+    borderTopRightRadius:'50%',
+    position:'absolute'
   }
 }
 class GraphComponent extends Component {
@@ -155,6 +173,7 @@ class GraphComponent extends Component {
 			graphData={this.state.graphData}
       tweetObject={this.state.tweetObjects[this.state.focusedTweet]}/>
       : null}
+      <div style={{flexDirection:"row",display:"flex"}}>
       <TwitterWindow
       scrollRef = {this.myRef}
       tweetObjects={this.state.tweetObjects}
@@ -164,6 +183,13 @@ class GraphComponent extends Component {
       onFocusSearchBar = {this.onFocusSearchBar}
       onSelectSearchBar= {this.onSelectSearchBar}
       focusedTweet={this.state.focusedTweet}/>
+      <div style={styles.Slider}>
+      <FaChevronCircleLeft
+      color="#657786"
+      size={18}/>
+      </div>
+
+      </div>
       </div>
     );
   }

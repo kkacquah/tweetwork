@@ -5,15 +5,12 @@ from flask import request
 from flask import jsonify
 
 
-request_token = None
 app = Flask(__name__)
-
 @app.route("/getTweetsByUser")
 def getTweetsByUser():
 	user = request.args.get('screen_name')
 	count = request.args.get('count')
-	maxId = request.args.get('max_id')
-	return getTweetsFromUser(user)
+	return str(getTweetsFromUser(user))
 @app.route("/getTweetReplySentiment")
 def getTweetReplySentiment():
 	user = request.args.get('screen_name')
