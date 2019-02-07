@@ -7,7 +7,8 @@ export function getNodesAndLinks (tweetObject,tweetReplies,sentimentPercentages)
   				description: reply.text,
           image:reply.profile_image_url,
           favorite_count:reply.favorite_count,
-          sentiment:reply.sentiment
+          sentiment:reply.sentiment,
+          tweetObject:reply
   			}
   		}
      const convertReplyToLink = (reply) => {

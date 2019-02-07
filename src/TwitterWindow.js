@@ -23,6 +23,7 @@ const styles = {
     backgroundColor:' #F5F8FA',
     top:0,
     width: '250px',
+    borderRight:'1px solid #AAB8C2',
     position: 'fixed',
   },
   navBar:{

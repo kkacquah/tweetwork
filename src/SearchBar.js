@@ -4,8 +4,8 @@ import './SearchBar.css';
 
 const styles = {
   Outer:{
-    height: '30px',
     width: '250px',
+    paddingBottom:5,
     backgroundColor: "white",
     justifyContent:'center',
     alignItems:'center',
@@ -18,7 +18,7 @@ const styles = {
     fontWeight: 'bold',
     textAlign: "left",
     marginLeft: 3,
-    marginBottom: 0,
+    marginBottom: 2,
     marginTop:2,
     float:"left"
   }
@@ -62,10 +62,9 @@ class SearchBar extends Component {
         type="text"
         value={this.state.value}
         onFocus={ this.onFocus }
-        onBlur={ this.onBlur }
         onChange={this.handleChange} />
         </div>
-        {this.state.focused ?
+        {this.props.focusedTweet ==null && this.state.focused ?
         <div class="speech-bubble">
         <div class="arrow-top"></div>
         {this.state.users.map(

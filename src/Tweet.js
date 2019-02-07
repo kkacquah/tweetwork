@@ -84,6 +84,17 @@ class Tweet extends Component {
       return styles.twitterCard
     }
   }
+  generateStyle(){
+    return {
+      backgroundColor: this.props.color,
+      borderBottom: '1px solid #E1E8ED',
+      flexDirection: 'row',
+      display: 'flex',
+      position:'relative',
+      justifyContent: 'space-between',
+      padding:5
+    }
+  }
   handleOnClick = () => {
     this.props.onClick(this.props.id);
   }
@@ -95,7 +106,7 @@ class Tweet extends Component {
   }
   render() {
     return (
-      <div style={this.cardStyle()} onClick={this.handleOnClick} onMouseEnter={this.handleOnMouseEnter} onMouseLeave={this.handleOnMouseLeave}>
+      <div style={this.props.color ? this.generateStyle() : this.cardStyle()} onClick={this.handleOnClick} onMouseEnter={this.handleOnMouseEnter} onMouseLeave={this.handleOnMouseLeave}>
         <div style={{marginTop:0}}>
           <img style={{borderRadius:'50%'}} width="20" height="20" src={this.props.tweetObject.profile_image_url} alt="avatar" />
           </div>

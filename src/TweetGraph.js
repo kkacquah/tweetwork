@@ -57,12 +57,14 @@ class TweetGraph extends Component
 			this.setState({
 				focusedNodeId: node.id
 			})
+			this.props.onHover(node.tweetObject)
 		}
 		if (prevNode){
 			if (prevNode.id === this.state.focusedNodeId){
 				this.setState({
 					focusedNodeId: null
 				})
+				this.props.onHover(null)
 		}
 	}
 }

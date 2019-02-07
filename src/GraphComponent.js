@@ -6,6 +6,11 @@ import {createTweetDisplayObject} from './helpers/loadTweetObject';
 import {getNodesAndLinks} from './helpers/graphUtils';
 import {getTweetsFromUser,getTweetReplies} from './apis/twitterApiCalls';
 import { FaChevronCircleLeft } from 'react-icons/fa';
+import { FaChevronCircleRight } from 'react-icons/fa';
+import Slider from 'react-slide-out';
+import DisplayTweet from './DisplayTweet';
+import 'react-slide-out/lib/index.css';
+
 const styles = {
   GraphBackground:{
     backgroundColor: '#F5F5F5',
@@ -22,23 +27,45 @@ const styles = {
     justifyContent:'center',
     alignItems:'center'
   },
-  Slider:{
+  SlideOut:{
     backgroundColor: '#F5F8FA',
     top:'50%',
     marginTop:'-24px',
     display:'flex',
     flexDirection:'column',
     justifyContent:'center',
+    paddingLeft:'2px',
     left:'250px',
+    width:'24px',
+    height:'48px',
+    borderRight:'1px solid #657786',
+    borderTop:'1px solid #657786',
+    borderBottom:' 1px solid #657786',
+    borderLeft:'1px solid #657786',
+    borderWidth:0.5,
+    borderBottomRightRadius:'50%',
+    borderTopRightRadius:'50%',
+    position:'fixed'
+  },
+  SlideIn:{
+    backgroundColor: '#F5F8FA',
+    top:'50%',
+    marginTop:'-24px',
+    display:'flex',
+    paddingLeft:'2px',
+    flexDirection:'column',
+    justifyContent:'center',
+    left:'0px',
     width:'24px',
     height:'48px',
     borderWidth:0.5,
     borderRight:'1px solid #657786',
+    borderLeft:'1px solid #657786',
     borderTop:'1px solid #657786',
     borderBottom:' 1px solid #657786',
     borderBottomRightRadius:'50%',
     borderTopRightRadius:'50%',
-    position:'absolute'
+    position:'fixed'
   }
 }
 class GraphComponent extends Component {
@@ -60,7 +87,9 @@ class GraphComponent extends Component {
     neutral_percentage: 0,
     positive_percentage: 0
   },
-      graphData:{nodes:[],links:[]}
+      graphData:{nodes:[],links:[]},
+      sidebarOpen:true,
+      displayedTweet:null
     }
   }
   loadTweetReplies(name,idString,numberOfRequests=40,focusedId){
@@ -100,10 +129,25 @@ class GraphComponent extends Component {
       focusedTweet: null
     })
   }
+  closeSidebar= () => {
+    this.setState({
+      sidebarOpen:false
+    })
+  }
+  openSidebar= () => {
+    this.setState({
+      sidebarOpen:true
+    })
+  }
   onSelectSearchBar = (value) => {
     this.getTweetObjects(value)
     this.setState({
       focusedTweet: null
+    })
+  }
+  hoverTweet = (value) => {
+    this.setState({
+      displayedTweet: value
     })
   }
   handleScroll = (e) => {
@@ -159,6 +203,7 @@ class GraphComponent extends Component {
     console.log("this.state.isLoadingGraph: ",this.state.isLoadingGraph)
     return (
       <div style={styles.GraphBackground}>
+      <DisplayTweet displayedTweet={this.state.displayedTweet}/>
       { this.state.isLoadingGraph?
        <div style={styles.loadingBackground} >
        <GradientLoadingWheel
@@ -171,9 +216,11 @@ class GraphComponent extends Component {
       <TweetGraph
       display ={!this.state.isLoadingGraph}
 			graphData={this.state.graphData}
-      tweetObject={this.state.tweetObjects[this.state.focusedTweet]}/>
+      tweetObject={this.state.tweetObjects[this.state.focusedTweet]}
+      onHover={this.hoverTweet}/>
       : null}
-      <div style={{flexDirection:"row",display:"flex"}}>
+      {this.state.sidebarOpen ?
+        <div>
       <TwitterWindow
       scrollRef = {this.myRef}
       tweetObjects={this.state.tweetObjects}
@@ -183,13 +230,24 @@ class GraphComponent extends Component {
       onFocusSearchBar = {this.onFocusSearchBar}
       onSelectSearchBar= {this.onSelectSearchBar}
       focusedTweet={this.state.focusedTweet}/>
-      <div style={styles.Slider}>
+      <div>
+      <div style={styles.rightBorderTop}>
+      </div>
+      <div style={styles.SlideOut} onClick={this.closeSidebar}>
       <FaChevronCircleLeft
       color="#657786"
       size={18}/>
       </div>
-
+      <div style={styles.rightBorderBottom}>
       </div>
+      </div>
+      </div>
+      :
+      <div style={styles.SlideIn} onClick={this.openSidebar}>
+      <FaChevronCircleRight
+      color="#657786"
+      size={18}/>
+      </div>}
       </div>
     );
   }
