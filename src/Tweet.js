@@ -7,6 +7,7 @@ const styles = {
     borderBottom: '1px solid #E1E8ED',
     flexDirection: 'row',
     display: 'flex',
+    position:'relative',
     justifyContent: 'space-between',
     padding:5
   },
@@ -15,6 +16,7 @@ const styles = {
     borderBottom: '1px solid #E1E8ED',
     flexDirection: 'row',
     display: 'flex',
+    position:'relative',
     justifyContent: 'space-between',
     padding:5
   },

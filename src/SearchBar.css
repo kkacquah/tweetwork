@@ -8,26 +8,28 @@
   padding-right:3px;
   text-indent: 2px;
   outline:none;
+  background-color: #F5F8FA;
   background-image:url('./assets/images/baseline-search-24px.svg');
   background-repeat:no-repeat;
-  background-position: "5% 0%";
+  background-position: "5% 0% 5%";
   padding-left:16px;
 }
 
-.search-bar:focus { border: 1px solid #1DA1F2; }
+.search-bar:focus {background-color: white; border: 1px solid #1DA1F2;}
 
 .speech-bubble {
     background-color: white;
     border: 1px solid #E1E8ED;
     border-radius: 5px;
     width: 175px;
-    left: 5px;
+    left: 20px;
     text-align: center;
     padding: 10px;
     position: absolute;
 }
 
 .speech-bubble .arrow {
+
     border-style: solid;
     position: absolute;
 }
@@ -35,6 +37,7 @@
 .arrow-top {
 width: 0;
 height: 0;
+left:15px;
 border-bottom: 8px solid #E1E8ED;
 border-left: 8px solid transparent;
 border-right: 8px solid transparent;

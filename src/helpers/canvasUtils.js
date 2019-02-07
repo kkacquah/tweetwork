@@ -24,25 +24,25 @@ function makeStrokeGradient (ctx,color1,color2,color3)  {
 	return gradient
 }
 
-function showLabel (node, size, ctx, focusedId) {
-	if (focusedId){
-		if (focusedId===node.id){
-
-			ctx.font = "3pt arial";
-			var lines = getLines(ctx, node.description, 40)
-			let percent = node.sentiment*100
-			ctx.fillStyle = sentimentToColor(percent,0.6)
-			ctx.strokeStyle = sentimentToColor(percent,1)
-			ctx.lineWidth = 1.5;
-			ctx.fillRect(node.x-22,node.y+(2*size)-4,44,4*lines.length+6);
-			ctx.strokeRect(node.x-22,node.y+(2*size)-4,44,4*lines.length+6);
-			ctx.fillStyle= 'black'
-			lines.forEach((line,i)=>{
-				ctx.fillText(line, node.x-20,node.y+(2*size)+(4*i))
-			});
-
-		}
-}
+ function showLabel (node, size, ctx, focusedId) {
+// 	if (focusedId){
+// 		if (focusedId===node.id){
+//
+// 			ctx.font = "3pt arial";
+// 			var lines = getLines(ctx, node.description, 40)
+// 			let percent = node.sentiment*100
+// 			ctx.fillStyle = sentimentToColor(percent,0.6)
+// 			ctx.strokeStyle = sentimentToColor(percent,1)
+// 			ctx.lineWidth = 1.5;
+// 			ctx.fillRect(node.x-22,node.y+(2*size)-4,44,4*lines.length+6);
+// 			ctx.strokeRect(node.x-22,node.y+(2*size)-4,44,4*lines.length+6);
+// 			ctx.fillStyle= 'black'
+// 			lines.forEach((line,i)=>{
+// 				ctx.fillText(line, node.x-20,node.y+(2*size)+(4*i))
+// 			});
+//
+// 		}
+// }
 }
 function nodeColor (node,focusedNodeId) {
 	if (focusedNodeId){
@@ -91,9 +91,6 @@ export function drawNode (node,ctx,focusedId,centerTweetIdStr) {
 		ctx.stroke()
 		showLabel (node.id, node.x, node.y, radius, ctx, node.description,focusedId);
 	}
-}
-export function getRadiusFromFavoriteCount(favoriteCount){
-	return Math.sqrt(Math.sqrt(favoriteCount*1000))
 }
 export function getRadiusFromFavoriteCount(favoriteCount){
 	return Math.sqrt(Math.sqrt(favoriteCount*1000))
