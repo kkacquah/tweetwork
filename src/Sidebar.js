@@ -9,24 +9,8 @@ import { FaChevronCircleLeft } from 'react-icons/fa';
 import { FaChevronCircleRight } from 'react-icons/fa';
 import Slider from 'react-slide-out';
 import DisplayTweet from './DisplayTweet';
-import SignInWithTwitter from './SignInWithTwitter';
 
 const styles = {
-  GraphBackground:{
-    backgroundColor: '#F5F5F5',
-    width:'100%',
-    height:'100%',
-    position: 'relative'
-  },
-  loadingBackground:{
-    backgroundColor: '#F5F5F5',
-    width:'100%',
-    height:'100%',
-    position:'fixed',
-    display:'flex',
-    justifyContent:'center',
-    alignItems:'center'
-  },
   SlideOut:{
     backgroundColor: '#F5F8FA',
     top:'50%',
@@ -67,7 +51,7 @@ const styles = {
     position:'fixed'
   }
 }
-class GraphComponent extends Component {
+class Sidebar extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -84,7 +68,8 @@ class GraphComponent extends Component {
       sentimentPercentages: {
     negative_percentage: 0,
     neutral_percentage: 0,
-    positive_percentage: 0
+    positive_percentage: 0,
+    signedInWithTwitter:False
   },
       graphData:{nodes:[],links:[]},
       sidebarOpen:true,
@@ -198,28 +183,8 @@ class GraphComponent extends Component {
   }
 
   render() {
-    console.log("this.state.isLoadingGraph: ",this.state.isLoadingGraph)
     return (
-      <div style={styles.GraphBackground}>
-      {this.state.displayedTweet ?
-      <DisplayTweet displayedTweet={this.state.displayedTweet}/>
-      : null }
-      { this.state.isLoadingGraph?
-       <div style={styles.loadingBackground} >
-       <GradientLoadingWheel
-       width={200}
-       height={200}
-       />
-       </div>  :
-        null }
-      {this.state.focusedTweet != null?
-      <TweetGraph
-      display ={!this.state.isLoadingGraph}
-			graphData={this.state.graphData}
-      tweetObject={this.state.tweetObjects[this.state.focusedTweet]}
-      onHover={this.hoverTweet}
-      hoveredTweet={this.state.displayedTweet}/>
-      : null}
+      <div>
       {this.state.sidebarOpen ?
         <div>
       <TwitterWindow
@@ -249,10 +214,9 @@ class GraphComponent extends Component {
       color="#657786"
       size={18}/>
       </div>}
-      <SignInWithTwitter/>
       </div>
     );
   }
 }
 
-export default GraphComponent;
+export default Sidebar;

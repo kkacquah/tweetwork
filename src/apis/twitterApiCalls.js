@@ -45,3 +45,16 @@ export function getTweetReplies (screenName,tweetId,numberOfRequests) {
     console.log(error)
   });
 }
+
+export function requestToken () {
+  return axios({
+    method: 'get',
+    url: `http://localhost:5000/auth/requestToken`,
+  })
+  .then ((response) =>{
+    return response.data.request_token
+  })
+  .catch((error) => {
+    console.log(error)
+  });
+}
