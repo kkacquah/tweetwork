@@ -1,18 +1,33 @@
 from config import *
+from Authenticate import *
 import requests
 
 def get_tweets_from_user(screenName,maxId=None):
 	params = {
 	'screen_name': screenName,
-	'count': 11,
-	'tweet_mode': 'extended'
+	'count': 45,
+	'tweet_mode': 'extended',
+	'exclude_replies':True,
+	'include_rts':False,
 	}
 	if (maxId):
 		params['max_id'] = maxId
 	r = requests.get(baseUrl + 'statuses/user_timeline.json',
 		params=params,
 		headers= bearerAuthorizationHeader)
-	return r.json()
+
+	response = r.json()
+	if (maxId is not None):
+		if(len(response)>1):
+			if(response[1]['id_str'] == maxId):
+				return []
+			else:
+				slicedResponse = response[1::]
+				return slicedResponse
+		else:
+			return []
+	else:
+		return response
 def get_tweet_replies(screenName,tweetId,maxId=None):
 	params = {
 	'q': 'to:'+screenName,
@@ -32,11 +47,11 @@ def get_tweet_replies(screenName,tweetId,maxId=None):
 		print(err)
 	response = r.json()['statuses']
 	if(len(response)>1):
-		if(response[0]['id_str'] == maxId):
+		if(response[1]['id_str'] == maxId):
 			return []
 		else:
 			slicedResponse = response[1::]
-			return list(filter(lambda tweet: tweet['in_reply_to_status_id_str'] == tweetId, slicedResponse))
+			return list(filter(lambda tweet: isReplyOrQuote(tweetId,tweet), slicedResponse))
 	else:
 		return []
 def collect_tweet_replies(screenName,tweetId,tries=10,maxId=None):
@@ -51,3 +66,28 @@ def collect_tweet_replies(screenName,tweetId,tries=10,maxId=None):
 			recursiveReplies = collect_tweet_replies(screenName,tweetId,tries-1,maxId)
 			totalReplies = requestReplies + recursiveReplies
 			return totalReplies
+def isReplyOrQuote(tweetId,tweet):
+	isReply = tweet['in_reply_to_status_id_str'] == tweetId
+	isQuote = False
+	if(tweet['is_quote_status']):
+		print('is_quote_status is true')
+		print(tweet)
+		isQuote = tweet['quoted_status_id_str'] == tweetId
+	return isReply or isQuote
+def get_home_timeline(screenName,maxId,access_token):
+	endpoint = baseUrl + "statuses/home_timeline.json"
+	queryString = '?screen_name=%s&count=%dtweet_mode=extended' % (screenName,10)
+	if(maxId):
+		queryString = queryString + 'max_id=%s' % (maxId)
+	response = make_request(endpoint + queryString,access_token)
+	if (maxId is not None):
+		if(len(response)>1):
+			if(response[1]['id_str'] == maxId):
+				return []
+			else:
+				slicedResponse = response[1::]
+				return slicedResponse
+		else:
+			return []
+	else:
+		return response

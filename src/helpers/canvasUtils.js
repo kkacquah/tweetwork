@@ -49,11 +49,11 @@ function nodeColor (node,focusedNodeId) {
 		if (focusedNodeId===node.id){
 			return "#1DA1F2"
 		} else {
-			let percent = node.sentiment*100
+			let percent = node.tweetObject.sentiment*100
 			return sentimentToColor(percent,1)
 		}
 	} else {
-		let percent = node.sentiment*100
+		let percent = node.tweetObject.sentiment*100
 		return sentimentToColor(percent,1)
 	}
 }
@@ -65,16 +65,16 @@ export function sentimentToColor (percent,opacity) {
 }
 var loadImage = function (node, ctx,size) {
   var img = new Image();
-	img.src = node.image;
+	img.src = node.tweetObject.profile_image_url;
 	ctx.drawImage(img, node.x-(size/2), node.y-(size/2),size,size);
 
 }
-export function drawNode (node,ctx,focusedId,centerTweetIdStr) {
+export function drawNode (node,ctx,centerTweetIdStr,focusedId) {
 	if (node.id == "lowSentiment" || node.id == "medSentiment" || node.id == "highSentiment"){
 		drawPercentage(node, ctx)
 	} else {
 
-		var size = node.favorite_count == 0 ? 3.16 : getRadiusFromFavoriteCount(node.favorite_count);
+		var size = node.tweetObject.favorite_count == 0 ? 3.16 : getRadiusFromFavoriteCount(node.tweetObject.favorite_count);
 		var radius = size*(3/5)
 		ctx.beginPath();
 		ctx.arc(node.x, node.y, radius, 0, 2 * Math.PI, false)
@@ -91,7 +91,6 @@ export function drawNode (node,ctx,focusedId,centerTweetIdStr) {
 		}
 		ctx.lineWidth = radius/2;
 		ctx.stroke()
-		showLabel (node.id, node.x, node.y, radius, ctx, node.description,focusedId);
 	}
 }
 export function getRadiusFromFavoriteCount(favoriteCount){

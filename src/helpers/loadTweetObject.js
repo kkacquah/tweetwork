@@ -11,8 +11,12 @@ export function createCachedTweetObject(tweetObject){
     verified: tweetObject.user.verified,
     retweet_count: tweetObject.retweet_count,
     favorite_count: tweetObject.favorite_count
-
   };
+  if(tweetObject.place){
+    cachedTweetDisplayObject["place"] = tweetObject.place.full_name
+  } else {
+    cachedTweetDisplayObject["place"] = null
+  }
   return cachedTweetDisplayObject;
 }
 export function createTweetDisplayObject(tweetObject){
@@ -26,7 +30,8 @@ export function createTweetDisplayObject(tweetObject){
     profile_image_url: cachedTweetDisplayObject.profile_image_url,
     verified: cachedTweetDisplayObject.verified,
     retweet_count: cachedTweetDisplayObject.retweet_count,
-    favorite_count: cachedTweetDisplayObject.favorite_count
+    favorite_count: cachedTweetDisplayObject.favorite_count,
+    place: cachedTweetDisplayObject.place
   };
   return tweetDisplayObject;
 }

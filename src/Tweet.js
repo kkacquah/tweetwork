@@ -87,11 +87,12 @@ class Tweet extends Component {
   generateStyle(){
     return {
       backgroundColor: this.props.color,
-      borderBottom: '1px solid #E1E8ED',
       flexDirection: 'row',
       display: 'flex',
       position:'relative',
       justifyContent: 'space-between',
+      borderTopRightRadius: this.props.borderTopRightRadius,
+      borderTopLeftRadius: this.props.borderTopLeftRadius,
       padding:5
     }
   }

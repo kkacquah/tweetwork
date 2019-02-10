@@ -33,7 +33,12 @@ class TweetGraph extends Component
 	}
 	nodeCanvasObject = (node, ctx) => {
 		if(this.props.tweetObject.id_str){
-			drawNode(node,ctx,this.state.focusedNodeId,this.props.tweetObject.id_str)
+			if(this.props.hoveredTweet){
+				drawNode(node,ctx,this.props.tweetObject.id_str,this.props.hoveredTweet.id_str)
+			} else {
+				drawNode(node,ctx,this.props.tweetObject.id_str)
+			}
+
 		}
   }
 	getStyle (display){
@@ -44,8 +49,8 @@ class TweetGraph extends Component
 		}
 	}
 	linkColor = (link) => {
-		if(link.source.sentiment){
-			let percent = link.source.sentiment*100
+		if(link.source.tweetObject){
+			let percent = link.source.tweetObject.sentiment*100
 			return sentimentToColor(percent,0.5)
 		} else {
 			return "transparent"
@@ -54,16 +59,10 @@ class TweetGraph extends Component
 
 	handleHover = (node,prevNode) => {
 		if (node){
-			this.setState({
-				focusedNodeId: node.id
-			})
 			this.props.onHover(node.tweetObject)
 		}
 		if (prevNode){
 			if (prevNode.id === this.state.focusedNodeId){
-				this.setState({
-					focusedNodeId: null
-				})
 				this.props.onHover(null)
 		}
 	}

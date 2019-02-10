@@ -2,12 +2,6 @@ export function getNodesAndLinks (tweetObject,tweetReplies,sentimentPercentages)
     const convertReplyToNode = (reply) => {
   			return {
   				id: reply.id_str,
-  				name: reply.name,
-  				val: 5,
-  				description: reply.text,
-          image:reply.profile_image_url,
-          favorite_count:reply.favorite_count,
-          sentiment:reply.sentiment,
           tweetObject:reply
   			}
   		}
@@ -19,9 +13,9 @@ export function getNodesAndLinks (tweetObject,tweetReplies,sentimentPercentages)
   		}
   		const convertReplyToSeperationLink = (reply) => {
   			var sentimentString
-  			if(reply.sentiment < 0.42){
+  			if(reply.sentiment < 0.50){
   					sentimentString = "lowSentiment"
-  			} else if (reply.sentiment >= 0.42 && reply.sentiment < 0.58){
+  			} else if (reply.sentiment ==0.50){
   					sentimentString = "medSentiment"
   			} else {
   					sentimentString = "highSentiment"
@@ -34,10 +28,7 @@ export function getNodesAndLinks (tweetObject,tweetReplies,sentimentPercentages)
   		let replyNodes = tweetReplies.map(convertReplyToNode)
   		replyNodes.push({
   			id: tweetObject.id_str,
-  			name: tweetObject.name,
-        image: tweetObject.profile_image_url,
-  			favorite_count: tweetObject.favorite_count, //Math.sqrt(tweetObject.favorite_count),
-  			description: tweetObject.text,
+        tweetObject:tweetObject
   		})
       if (sentimentPercentages.lowSentiment || sentimentPercentages.medSentiment || sentimentPercentages.highSentiment){
         replyNodes = replyNodes.concat([

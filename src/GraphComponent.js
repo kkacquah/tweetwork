@@ -9,7 +9,6 @@ import { FaChevronCircleLeft } from 'react-icons/fa';
 import { FaChevronCircleRight } from 'react-icons/fa';
 import Slider from 'react-slide-out';
 import DisplayTweet from './DisplayTweet';
-import 'react-slide-out/lib/index.css';
 
 const styles = {
   GraphBackground:{
@@ -19,7 +18,7 @@ const styles = {
     position: 'relative'
   },
   loadingBackground:{
-    backgroundColor: '#F5F8FA',
+    backgroundColor: '#F5F5F5',
     width:'100%',
     height:'100%',
     position:'fixed',
@@ -38,10 +37,10 @@ const styles = {
     left:'250px',
     width:'24px',
     height:'48px',
-    borderRight:'1px solid #657786',
-    borderTop:'1px solid #657786',
-    borderBottom:' 1px solid #657786',
-    borderLeft:'1px solid #657786',
+    borderRight:'1px solid #E1E8ED',
+    borderLeft:'1px solid #E1E8ED',
+    borderTop:'1px solid #E1E8ED',
+    borderBottom:' 1px solid #E1E8ED',
     borderWidth:0.5,
     borderBottomRightRadius:'50%',
     borderTopRightRadius:'50%',
@@ -59,10 +58,9 @@ const styles = {
     width:'24px',
     height:'48px',
     borderWidth:0.5,
-    borderRight:'1px solid #657786',
-    borderLeft:'1px solid #657786',
-    borderTop:'1px solid #657786',
-    borderBottom:' 1px solid #657786',
+    borderRight:'1px solid #E1E8ED',
+    borderTop:'1px solid #E1E8ED',
+    borderBottom:' 1px solid #E1E8ED',
     borderBottomRightRadius:'50%',
     borderTopRightRadius:'50%',
     position:'fixed'
@@ -92,7 +90,7 @@ class GraphComponent extends Component {
       displayedTweet:null
     }
   }
-  loadTweetReplies(name,idString,numberOfRequests=40,focusedId){
+  loadTweetReplies(name,idString,numberOfRequests=10,focusedId){
      this.setState({
         isLoadingGraph:true
       })
@@ -122,7 +120,7 @@ class GraphComponent extends Component {
     this.setState({
       focusedTweet: id
     })
-    this.loadTweetReplies(this.state.screenName,this.state.tweetObjects[id].id_str,10,id)//necessary to load graph
+    this.loadTweetReplies(this.state.screenName,this.state.tweetObjects[id].id_str,30,id)//necessary to load graph
   }
   onFocusSearchBar = (id) => {
     this.setState({
@@ -162,8 +160,8 @@ class GraphComponent extends Component {
   }
   getTweetObjects(screenName){
     getTweetsFromUser(screenName,null)
-    .then((tweetObjs)=> {
-      var newTweetObjects = tweetObjs.map((tweetObject) => createTweetDisplayObject(tweetObject));
+    .then((newTweetObjects)=> {
+      console.log(newTweetObjects)
       var lastTweetId = newTweetObjects[newTweetObjects.length-1].id_str
       this.setState({
         screenName: screenName,
@@ -179,8 +177,7 @@ class GraphComponent extends Component {
   }
   loadTweetObjects(){
     getTweetsFromUser(this.state.screenName,this.state.cursor)
-    .then((tweetObjs)=> {
-        var newTweetObjects = tweetObjs.map((tweetObject) => createTweetDisplayObject(tweetObject));
+    .then((newTweetObjects)=> {
         var lastTweetId = newTweetObjects[newTweetObjects.length-1].id_str
         this.setState({
           tweetObjects: this.state.tweetObjects.concat(newTweetObjects),
@@ -203,7 +200,9 @@ class GraphComponent extends Component {
     console.log("this.state.isLoadingGraph: ",this.state.isLoadingGraph)
     return (
       <div style={styles.GraphBackground}>
+      {this.state.displayedTweet ?
       <DisplayTweet displayedTweet={this.state.displayedTweet}/>
+      : null }
       { this.state.isLoadingGraph?
        <div style={styles.loadingBackground} >
        <GradientLoadingWheel
@@ -217,7 +216,8 @@ class GraphComponent extends Component {
       display ={!this.state.isLoadingGraph}
 			graphData={this.state.graphData}
       tweetObject={this.state.tweetObjects[this.state.focusedTweet]}
-      onHover={this.hoverTweet}/>
+      onHover={this.hoverTweet}
+      hoveredTweet={this.state.displayedTweet}/>
       : null}
       {this.state.sidebarOpen ?
         <div>
