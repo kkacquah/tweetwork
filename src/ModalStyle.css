@@ -1,0 +1,46 @@
+.Modal {
+  position: absolute;
+  display:flex;
+  padding:20px;
+  /* top:50%;
+  left:50%;
+  margin-left:-200px;
+  margin-top:-75px; */
+  width:400px;
+  align-items:center;
+  justify-content:center;
+  flex-direction: column;
+  background-color: #F5F8FA;
+  border: 1px solid #E1E8ED;
+  outline: none;
+}
+
+.Overlay {
+  display:flex;
+  position: fixed;
+  align-items:center;
+  justify-content:center;
+  display:'flex';
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.75);
+  outline: none;
+}
+
+.ReactModal__Overlay {
+    opacity: 0;
+    transition: opacity 100ms ease-in-out;
+    outline: none;
+}
+
+.ReactModal__Overlay--after-open{
+    opacity: 1;
+    outline: none;
+}
+
+.ReactModal__Overlay--before-close{
+    opacity: 0;
+    outline: none;
+}

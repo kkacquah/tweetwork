@@ -50,10 +50,15 @@ def login():
 	request_token = request.args.get('request_token')
 	if request_token in Session:
 		sessionObject = Session[request_token]
-		access_token = loginWithPin(oauth_verifier,request_token,sessionObject['request_token_secret'])
-		sessionObject['access_token'] = access_token
-		return Response(
-		'You have successfuly verified your credentials', 200)
+
+		access_token,screen_name = loginWithPin(oauth_verifier,request_token,sessionObject['request_token_secret'])
+		if(access_token is not None):
+			sessionObject['access_token'] = access_token
+			response = {"screen_name":screen_name}
+			return jsonify(response)
+		else:
+			return Response(
+			'Incorrect Pin', 400)
 	else:
 		return Response(
 		'No such user exists with these creditials', 401)

@@ -41,13 +41,13 @@ def loginWithPin(oauth_verifier,request_token,request_token_secret):
     client = oauth.Client(consumer, token)
 
     resp, content = client.request(access_token_url, "POST")
-    print(resp)
+    print("loginWithPin response")
     access_token_encoded = dict(parse_qsl(content))
 
     access_token = dict()
     for (key,value) in access_token_encoded.items():
         access_token[key.decode()] = value.decode()
-    return oauth.Token(access_token['oauth_token'],access_token['oauth_token_secret'])
+    return oauth.Token(access_token['oauth_token'],access_token['oauth_token_secret']),access_token['screen_name']
 def make_request(endpoint,access_token):
     client = oauth.Client(consumer, token=access_token)
     resp, content = client.request(endpoint)

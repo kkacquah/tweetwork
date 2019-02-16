@@ -51,7 +51,7 @@ def get_tweet_replies(screenName,tweetId,maxId=None):
 			return []
 		else:
 			slicedResponse = response[1::]
-			return list(filter(lambda tweet: isReplyOrQuote(tweetId,tweet), slicedResponse))
+			return slicedResponse
 	else:
 		return []
 def collect_tweet_replies(screenName,tweetId,tries=10,maxId=None):
@@ -70,8 +70,6 @@ def isReplyOrQuote(tweetId,tweet):
 	isReply = tweet['in_reply_to_status_id_str'] == tweetId
 	isQuote = False
 	if(tweet['is_quote_status']):
-		print('is_quote_status is true')
-		print(tweet)
 		isQuote = tweet['quoted_status_id_str'] == tweetId
 	return isReply or isQuote
 def get_home_timeline(screenName,maxId,access_token):

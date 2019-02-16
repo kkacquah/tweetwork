@@ -1,20 +1,27 @@
 function drawPercentage (node, ctx) {
 	const label = `${node.percentage.toFixed(0)}%`;
-	ctx.font = `bold 16pt arial`;
+	ctx.font = `8pt arial`;
 	const textWidth = ctx.measureText(label).width;
 	const bckgDimensions = [textWidth, 16].map(n => n + 16 * 0.2); // some padding
 	var textColor
-	if(node.id == "lowSentiment"){
-		textColor=makeStrokeGradient(ctx,0,21,42)
-	}else if(node.id == "medSentiment") {
-		textColor =makeStrokeGradient(ctx,42,50,58)
-	}else if(node.id == "highSentiment"){
-		textColor =makeStrokeGradient(ctx,58,79,100)
-	}
-	ctx.fillStyle = textColor
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
-	ctx.fillText(label,node.x,node.y);
+	if(node.id == "lowSentiment"){
+		textColor=makeStrokeGradient(ctx,0,21,42)
+		ctx.fillStyle = textColor
+		ctx.fillText("Negative",node.x,node.y+8);
+	}else if(node.id == "medSentiment") {
+		textColor =makeStrokeGradient(ctx,42,50,58)
+		ctx.fillStyle = textColor
+		ctx.fillText("Neutral",node.x,node.y+8);
+	}else if(node.id == "highSentiment"){
+		textColor =makeStrokeGradient(ctx,58,79,100)
+		ctx.fillStyle = textColor
+		ctx.fillText("Positive",node.x,node.y+8);
+	}
+	ctx.font = `bold 16pt arial`;
+	ctx.fillText(label,node.x,node.y-8);
+
 }
 function makeStrokeGradient (ctx,color1,color2,color3)  {
 	var gradient = ctx.createLinearGradient(-100, -100, 100, 100);

@@ -10,7 +10,8 @@ const styles = {
     justifyContent:'center',
     alignItems:'center',
     display: 'inline-block',
-    order:1
+    order:1,
+    borderTop: '1px solid #E1E8ED'
   },
   userFont:{
     fontSize: 12,
@@ -43,7 +44,6 @@ class SearchBar extends Component {
     }
   }
   onFocus  = () => {
-    this.props.onFocus()
     this.setState({focused: true});
   }
   onBlur  = () => {
@@ -70,7 +70,7 @@ class SearchBar extends Component {
         onFocus={ this.onFocus }
         onChange={this.handleChange} />
         </div>
-        {this.props.focusedTweet ==null && this.state.focused ?
+        { this.state.focused ?
         <div class="speech-bubble">
         <div class="arrow-top"></div>
         {this.state.users.map(
