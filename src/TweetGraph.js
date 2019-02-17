@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { ForceGraph2D} from 'react-force-graph';
 import { drawNode,sentimentToColor,getRadiusFromFavoriteCount} from './helpers/canvasUtils';
+import DisplayTweet from "./DisplayTweet"
 const nodes = {
 		"nodes": [
 				{
@@ -28,13 +29,14 @@ class TweetGraph extends Component
 	constructor(props) {
 		super(props);
 		this.state = {
-			focusedNodeId: null
+			focusedNodeId: null,
+			displayedTweet: null
 		}
 	}
 	nodeCanvasObject = (node, ctx) => {
 		if(this.props.tweetObject.id_str){
-			if(this.props.hoveredTweet){
-				drawNode(node,ctx,this.props.tweetObject.id_str,this.props.hoveredTweet.id_str)
+			if(this.state.displayedTweet){
+				drawNode(node,ctx,this.props.tweetObject.id_str,this.state.displayedTweet.id_str)
 			} else {
 				drawNode(node,ctx,this.props.tweetObject.id_str)
 			}
@@ -43,9 +45,9 @@ class TweetGraph extends Component
   }
 	getStyle (display){
 		if (display){
-			return {}
+			return {backgroundColor:'transparent'}
 		} else {
-			return {display:'none'}
+			return {display:'none',backgroundColor:'transparent'}
 		}
 	}
 	linkColor = (link) => {
@@ -59,13 +61,18 @@ class TweetGraph extends Component
 
 	handleHover = (node,prevNode) => {
 		if (node){
-			this.props.onHover(node.tweetObject)
+			this.hoverTweet(node.tweetObject)
 		}
 		if (prevNode){
 			if (prevNode.id === this.state.focusedNodeId){
-				this.props.onHover(null)
+				this.hoverTweet(null)
 		}
 	}
+}
+hoverTweet = (value) => {
+	this.setState({
+		displayedTweet: value
+	})
 }
 handleClick = node => {
           // Aim at node from outside it
@@ -87,6 +94,10 @@ render() {
 		radius = getRadiusFromFavoriteCount(this.props.tweetObject.favorite_count)*(3/5)
 	}
   return (
+		<div>
+		{this.state.displayedTweet ?
+		<DisplayTweet displayedTweet={this.state.displayedTweet}/>
+		: null }
 		<div style={this.getStyle(this.props.display)}>
 		<ForceGraph2D
 		ref={el => { this.fg = el; }}
@@ -101,6 +112,7 @@ render() {
 		dagMode={'radialin'}
 		dagLevelDistance={radius+50}
 		/>
+		</div>
 		</div>
 	);
 }

@@ -90,7 +90,6 @@ class Sidebar extends Component {
     })
   }
   makeMyDataNodes (tweetObject,tweetReplies,sentimentPercentages) {
-    console.log(sentimentPercentages)
   	if(tweetObject && tweetReplies) {
   		let graphData = getNodesAndLinks(tweetObject,tweetReplies,sentimentPercentages)
   		this.setState({
@@ -147,7 +146,6 @@ class Sidebar extends Component {
   getTweetObjects(screenName){
     getTweetsFromUser(screenName,null)
     .then((newTweetObjects)=> {
-      console.log(newTweetObjects)
       var lastTweetId = newTweetObjects[newTweetObjects.length-1].id_str
       this.setState({
         screenName: screenName,

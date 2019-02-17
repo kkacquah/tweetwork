@@ -4,7 +4,7 @@ import twitterVerifiedSymbol from './assets/images/twitterVerifiedSymbol.png'
 const styles = {
   twitterCard:{
     backgroundColor: 'white',
-    borderBottom: '1px solid #E1E8ED',
+    borderTop: '1px solid #E1E8ED',
     flexDirection: 'row',
     display: 'flex',
     position:'relative',
@@ -13,7 +13,7 @@ const styles = {
   },
   twitterCardFocused:{
     backgroundColor: ' #E1E8ED',
-    borderBottom: '1px solid #E1E8ED',
+    borderTop: '1px solid #E1E8ED',
     flexDirection: 'row',
     display: 'flex',
     position:'relative',
@@ -22,7 +22,7 @@ const styles = {
   },
   twitterCardHovered:{
     backgroundColor: ' #F5F8FA',
-    borderBottom: '1px solid #E1E8ED',
+    borderTop: '1px solid #E1E8ED',
     flexDirection: 'row',
     display: 'flex',
     justifyContent: 'space-between',
@@ -76,7 +76,11 @@ class Tweet extends Component {
         this.state={hovered:false }
       }
   cardStyle(){
-    if (this.props.focusedTweet === this.props.id){
+    //if no focused tweet return regular style
+    if (!this.props.focusedTweet){
+      return styles.twitterCard
+    }
+    if (this.props.tweetObject.id_str == this.props.focusedTweet.id_str){
       return styles.twitterCardFocused
     } else if (this.state.hovered){
       return styles.twitterCardHovered
@@ -97,7 +101,7 @@ class Tweet extends Component {
     }
   }
   handleOnClick = () => {
-    this.props.onClick(this.props.id);
+    this.props.onClick(this.props.tweetObject);
   }
   handleOnMouseEnter = () => {
     this.setState({hovered:true})
