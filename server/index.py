@@ -1,4 +1,5 @@
 from GetTweets import *
+from GetUsers import *
 from utils import *
 from Authenticate import *
 from flask import Flask
@@ -13,7 +14,9 @@ def getTweetsByUser():
 	user = request.args.get('screen_name')
 	tweets = get_tweets_from_user(user)
 	tweetsCompact = [compact_tweet_object(tweet) for tweet in tweets]
-	return jsonify(tweetsCompact)
+	response = jsonify(tweetsCompact)
+	response.headers.add('Access-Control-Allow-Origin', '*')
+	return response
 @app.route("/getHomeTimeline")
 def getHomeTimeline():
 	OAuthToken = request.args.get('request_token')
@@ -38,6 +41,19 @@ def getTweetReplySentiment():
 	sentimentPercentages = get_tweet_sentiment_percentages(tweetRepliesCompact)
 	response = {'replies':tweetRepliesCompact,'percentages':sentimentPercentages}
 	return jsonify(response)
+@app.route("/searchUser")
+def get_users():
+	screen_name = request.args.get('screen_name')
+	OAuthToken = request.args.get('requestToken')
+	response = search_user(screen_name,requestToken)
+	if OAuthToken in Session:
+		SessionObject = Session[OAuthToken]
+		response = search_users(screen_name,SessionObject['access_token'])
+		return jsonify(response)
+	else:
+		return Response(
+	    'Could not verify your access level for that URL.\n'
+	    'You have to login with proper credentials', 401)
 @app.route("/auth/requestToken")
 def requestToken():
 	request_token, request_token_secret = request_OAuth_token()

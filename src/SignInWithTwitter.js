@@ -53,6 +53,7 @@ class SignInWithTwitter extends Component {
     })
   }
   render() {
+    console.log(this.props.username)
     return (
       <div>
       {this.props.username ?
