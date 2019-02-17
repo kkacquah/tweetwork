@@ -90,7 +90,8 @@ class TwitterWindow extends Component {
         tweetObjects: newTweetObjects,
         cursor:lastTweetId,
         isLoading: false,
-        focusedTweetReplies: []
+        focusedTweetReplies: [],
+        prompt:null
       })
     })
     .catch((error) => {
@@ -127,7 +128,9 @@ class TwitterWindow extends Component {
       this.getTweets()
     }
   }
+  //To fix this, seperate the prompt and tweet objects, but the tweet objects 
   render() {
+    console.log(this.state.tab)
     return (
         <div style={styles.window} >
         <NavBar
@@ -135,25 +138,25 @@ class TwitterWindow extends Component {
         onClickExplore= {this.onClickExplore}
         onClickSearch= {this.onClickSearch}
         onClickHome = {this.onClickHome}/>
+
+        <div ref={this.myRef} style={styles.twitterWindow} ref={this.myRef} onScroll= {this.handleScroll}>
+        {this.state.tab != "home" &&
+         <SearchBar
+         onSelect= {this.props.onSelectSearchBar}
+         focusedTweet= {this.props.focusedTweet}
+         onFocus={this.props.onFocusSearchBar}/>}
         {this.state.prompt || this.state.isLoading ?
          <Prompt text= {this.state.prompt}/>:
-        <div ref={this.myRef} style={styles.twitterWindow} ref={this.myRef} onScroll= {this.handleScroll}>
-          {this.state.tweetObjects.map((value,i) => <Tweet focusedTweet={this.props.focusedTweet} id={i} onClick={this.props.focus} tweetObject = {value}/>)}
+          this.state.tweetObjects.map((value,i) => <Tweet focusedTweet={this.props.focusedTweet} id={i} onClick={this.props.focus} tweetObject = {value}/>)}
 
-          { this.state.isLoading &&
-            <div style={{height:50}}>
-          <ReactLoading style={styles.loadingStyle} type={"spin"} color={"#E1E8ED"} />
-          </div>}
-           </div>}
-           {this.state.tab != "home" &&
-            <SearchBar
-            onSelect= {this.props.onSelectSearchBar}
-            focusedTweet= {this.props.focusedTweet}
-            onFocus={this.props.onFocusSearchBar}/>}
-
+          </div>
         </div>
     );
   }
 }
+//{ this.state.isLoading &&
+//   <div style={{height:50}}>
+// <ReactLoading style={styles.loadingStyle} type={"spin"} color={"#E1E8ED"} />
+// </div>}
 
 export default TwitterWindow;

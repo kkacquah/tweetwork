@@ -56,6 +56,7 @@ class SearchBar extends Component {
     this.props.onSelect(this.state.users[id].screen_name);
     this.setState({focused: false});
   }
+  //add 1 second timer that makes query request to twitter command
   handleChange = (event) => {
       this.setState({value: event.target.value});
     }

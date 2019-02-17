@@ -83,6 +83,8 @@ class SignInWithTwitter extends Component {
         overlayClassName="Overlay"
          style={{modalStyle}}
          isOpen={this.props.modalOpen}
+         shouldCloseOnOverlayClick={true}
+         shouldCloseOnEsc={true}
        >
        <FaTwitter
        color={"#1DA1F2"}
