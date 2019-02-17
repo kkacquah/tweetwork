@@ -75,6 +75,8 @@ class SignInWithTwitter extends Component {
 
 
   render() {
+    console.log(this.props.signedInUser)
+    console.log(this.props.requestToken)
     return (
       <div>
       <Modal
